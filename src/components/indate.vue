@@ -61,16 +61,15 @@ export default {
       this.$refs.unicom_picker_level3.show((items) => {
         this.result_level1 =
           items[0].text + "/" + items[1].text + "/" + items[2].text;
+        this.$emit("childtimer1", this.result_level1);
       });
-      this.$emit("childtimer1", "dasdasd");
     },
     showLevel2() {
       this.$refs.unicom_picker_level3.show((items) => {
         this.result_level2 =
           items[0].text + "/" + items[1].text + "/" + items[2].text;
+        this.$emit("childtimer2", this.result_level2);
       });
-
-      this.$emit("childtimer2", "sdasdasd");
     },
     onCancel_level3() {
       console.log("取消");

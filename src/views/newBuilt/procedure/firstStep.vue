@@ -75,7 +75,7 @@
         ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
-      <div class="iptradio" @click="bottom = true">
+      <div class="iptradio">
         <div>企业经营地址</div>
         <div>北京市西城区 ></div>
       </div>
@@ -159,7 +159,7 @@ export default {
       console.log(data);
     },
     nextbtn() {
-      this.$router.push("secondStep");
+      this.$router.push("/secondStep");
     },
   },
 };
