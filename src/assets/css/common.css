@@ -1,0 +1,125 @@
+@font-face {
+    font-family: WoNumbers-Regular;
+    src: url('../font/WoNumbers-Regular.otf');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-size: 100%;
+}
+
+html {
+    color: #333;
+    background: #ffffff;
+    -webkit-text-size-adjust: 100%;
+    letter-spacing: 0;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    line-height: 1.15;
+    -webkit-overflow-scrolling: touch;
+    -webkit-user-select: none;
+}
+
+html,
+body,
+#app {
+    height: 100%;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Lantinghei SC", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    font-size: 16px;
+    color: #333;
+}
+
+:focus {
+    outline: 0;
+}
+
+nav ul {
+    list-style: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+a {
+    text-decoration: none;
+    outline: none;
+}
+
+button {
+    border: 0;
+    outline: none;
+}
+
+
+
+/* 单拿出来的样式 */
+.title {
+    padding-top: 20px;
+    font-family: PingFangSC-Semibold;
+    font-size: 18px;
+    color: #333333;
+    line-height: 18px;
+}
+
+.txt {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #999999;
+    text-align: justify;
+    line-height: 12px;
+    margin-top: 10px;
+}
+
+.ipt {
+    height: 55px;
+    line-height: 55px;
+    font-family: PingFangSC-Regular;
+    font-size: 15px;
+    color: #333333;
+    line-height: 55px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.iptradio {
+    height: 55px;
+    line-height: 55px;
+    font-family: PingFangSC-Regular;
+    font-size: 15px;
+    color: #333333;
+    line-height: 55px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    overflow: hidden;
+
+}
+
+.label2 {
+    margin-left: 23px;
+}
+
+.radio {
+    margin-right: 5px;
+}
