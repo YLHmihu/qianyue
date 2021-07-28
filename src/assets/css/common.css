@@ -101,12 +101,10 @@ button {
 }
 
 .iptradio {
-    height: 55px;
-    line-height: 55px;
+    min-height: 55px;
     font-family: PingFangSC-Regular;
     font-size: 15px;
     color: #333333;
-    line-height: 55px;
     display: flex;
     flex-direction: row;
     align-items: center;

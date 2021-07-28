@@ -28,9 +28,7 @@
       <div class="iptradio validityPeriod">
         <div class="left">身份证有效期</div>
         <indate></indate>
-        <unicom-radio-group v-model="validitychecked" row>
-          <unicom-radio label="0">长期</unicom-radio>
-        </unicom-radio-group>
+        <unicom-checked v-model="validitychecked">长期</unicom-checked>
       </div>
     </div>
     <interval></interval>
@@ -83,7 +81,14 @@ import Process from "../../../components/process.vue";
 import Interval from "../../../components/interval.vue";
 import UploadPictures from "../../../components/uploadPictures.vue";
 import Indate from "../../../components/indate.vue";
-import { Button, Input, Divider, Radio, RadioGroup } from "unicom-mobile";
+import {
+  Button,
+  Input,
+  Divider,
+  Radio,
+  RadioGroup,
+  Checked,
+} from "unicom-mobile";
 export default {
   components: {
     Process,
@@ -95,6 +100,7 @@ export default {
     [Divider.name]: Divider,
     [Radio.name]: Radio,
     [RadioGroup.name]: RadioGroup,
+    [Checked.name]: Checked,
   },
   data() {
     return {
@@ -180,5 +186,16 @@ export default {
 }
 /deep/.unicom-input .unicom-table-view-cell {
   margin-top: 0;
+}
+//单选，复选按钮的样式
+/deep/.unicom-radio__input {
+  width: 18px;
+  height: 18px;
+  border-radius: 100px;
+}
+/deep/.unicom-checked__input {
+  width: 18px;
+  height: 18px;
+  border-radius: 100px;
 }
 </style>

@@ -146,4 +146,16 @@ export default {
 /deep/.unicom-input .unicom-table-view-cell {
   margin-top: 0;
 }
+
+//单选，复选按钮的样式
+/deep/.unicom-radio__input {
+  width: 18px;
+  height: 18px;
+  border-radius: 100px;
+}
+/deep/.unicom-checked__input {
+  width: 18px;
+  height: 18px;
+  border-radius: 100px;
+}
 </style>

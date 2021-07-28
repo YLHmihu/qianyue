@@ -2,12 +2,12 @@ export default [
     //首页
     {
         path: "/",
-        component: () => import("../views/home.vue"),
+        component: () => import("../views/Home.vue"),
     },
     {
         path: "/home",
         name: "home",
-        component: () => import("../views/home.vue"),
+        component: () => import("../views/Home.vue"),
     },
     //材料准备页
     {

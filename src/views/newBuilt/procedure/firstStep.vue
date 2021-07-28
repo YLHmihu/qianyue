@@ -61,9 +61,7 @@
       <div class="iptradio validitytimer">
         <div class="left">营业执照有效期</div>
         <indate @childtimer1="childtimer1" @childtimer2="childtimer2"></indate>
-        <unicom-radio-group v-model="validitychecked" row>
-          <unicom-radio label="0">长期</unicom-radio>
-        </unicom-radio-group>
+        <unicom-checked v-model="validitychecked">长期</unicom-checked>
       </div>
 
       <unicom-divider :hairline="true"></unicom-divider>
@@ -77,14 +75,12 @@
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="iptradio">
         <div>企业经营地址</div>
-        <div>北京市西城区 ></div>
+        <!-- <div>北京市西城区 ></div> -->
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="iptradio">
         <div class="left">详细地址</div>
-        <div class="right">
-          二龙路甲33号二龙路甲33号二龙路甲33号二龙路甲33号
-        </div>
+        <my-textarea class="address_textarea"></my-textarea>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="ipt">
@@ -115,6 +111,7 @@ import Process from "../../../components/process.vue";
 import UploadPictures from "../../../components/uploadPictures.vue";
 import Interval from "../../../components/interval.vue";
 import Indate from "../../../components/indate.vue";
+import MyTextarea from "../../../components/textarea.vue";
 import {
   Button,
   Input,
@@ -123,6 +120,7 @@ import {
   RadioGroup,
   Picker,
   Popup,
+  Checked,
 } from "unicom-mobile";
 export default {
   components: {
@@ -130,6 +128,7 @@ export default {
     UploadPictures,
     Interval,
     Indate,
+    MyTextarea,
     [Button.name]: Button,
     [Input.name]: Input,
     [Divider.name]: Divider,
@@ -137,13 +136,14 @@ export default {
     [RadioGroup.name]: RadioGroup,
     [Picker.name]: Picker,
     [Popup.name]: Popup,
+    [Checked.name]: Checked,
   },
   data() {
     return {
       active: [1],
       field: "input",
       radio: "1",
-      validitychecked: "",
+      validitychecked: false,
       logo_img: require("../../../assets/img/upload1.png"),
       placePhoto_img: require("../../../assets/img/upload2.png"),
       managemenPhoto_img1: require("../../../assets/img/upload3.png"),
@@ -269,10 +269,14 @@ export default {
         }
       }
     }
+
     .validitytimer {
       /deep/.unicom-radio__label {
         padding-right: 0;
       }
+    }
+    .address_textarea {
+      width: 263px;
     }
   }
   .btndiv {
@@ -293,5 +297,17 @@ export default {
 }
 .ipt_left2 {
   margin-right: 5px;
+}
+
+//单选，复选按钮的样式
+/deep/.unicom-radio__input {
+  width: 18px;
+  height: 18px;
+  border-radius: 100px;
+}
+/deep/.unicom-checked__input {
+  width: 18px;
+  height: 18px;
+  border-radius: 100px;
 }
 </style>
