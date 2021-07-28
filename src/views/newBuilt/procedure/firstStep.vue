@@ -36,19 +36,65 @@
       <div class="photo">
         <div class="images">
           <upload-pictures
-            :value="placePhoto_img"
-            @imgsrc="placePhotoBase64"
-            ref="placePhotoson"
+            :value="placePhoto1_img"
+            @imgsrc="placePhoto1Base64"
+            ref="placePhoto1son"
           ></upload-pictures>
-          <span>门店外照片</span>
+          <span v-show="placePhoto1_span">门店外照片</span>
+          <div
+            class="placePhoto_mask"
+            v-show="placePhoto1_mask"
+            @click="placePhoto1mask"
+          ></div>
+          <img
+            class="close"
+            v-show="placePhoto1_close"
+            @click="placePhoto1close"
+            src="../../../assets/img/close.svg"
+            alt=""
+          />
         </div>
+
         <div class="images">
-          <upload-pictures :value="placePhoto_img"></upload-pictures>
-          <span>门店内照片</span>
+          <upload-pictures
+            :value="placePhoto2_img"
+            @imgsrc="placePhoto2Base64"
+            ref="placePhoto2son"
+          ></upload-pictures>
+          <span v-show="placePhoto2_span">门店内照片</span>
+          <div
+            class="placePhoto_mask"
+            v-show="placePhoto2_mask"
+            @click="placePhoto2mask"
+          ></div>
+          <img
+            class="close"
+            v-show="placePhoto2_close"
+            @click="placePhoto2close"
+            src="../../../assets/img/close.svg"
+            alt=""
+          />
         </div>
+
         <div class="images">
-          <upload-pictures :value="placePhoto_img"></upload-pictures>
-          <span>收银台照片</span>
+          <upload-pictures
+            :value="placePhoto3_img"
+            @imgsrc="placePhoto3Base64"
+            ref="placePhoto3son"
+          ></upload-pictures>
+          <span v-show="placePhoto3_span">收银台照片</span>
+          <div
+            class="placePhoto_mask"
+            v-show="placePhoto3_mask"
+            @click="placePhoto3mask"
+          ></div>
+          <img
+            class="close"
+            v-show="placePhoto3_close"
+            @click="placePhoto3close"
+            src="../../../assets/img/close.svg"
+            alt=""
+          />
         </div>
       </div>
       <div class="txt">请上传JPG、PNG格式图片，大小不超过5MB</div>
@@ -66,12 +112,44 @@
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="managemenPhoto">
         <div class="images">
-          <upload-pictures :value="managemenPhoto_img1"></upload-pictures>
-          <span>营业执照照片</span>
+          <upload-pictures
+            :value="managemenPhoto_img1"
+            @imgsrc="managemenPhoto1Base64"
+            ref="managemenPhoto1son"
+          ></upload-pictures>
+          <span v-show="managemenPhoto1_span">营业执照照片</span>
+          <div
+            class="managemenPhoto_mask"
+            v-show="managemenPhoto1_mask"
+            @click="managemenPhoto1mask"
+          ></div>
+          <img
+            class="close"
+            v-show="managemenPhoto1_close"
+            @click="managemenPhoto1close"
+            src="../../../assets/img/close.svg"
+            alt=""
+          />
         </div>
         <div class="images">
-          <upload-pictures :value="managemenPhoto_img2"></upload-pictures>
-          <span>特殊经营许可证照片</span>
+          <upload-pictures
+            :value="managemenPhoto_img2"
+            @imgsrc="managemenPhoto2Base64"
+            ref="managemenPhoto2son"
+          ></upload-pictures>
+          <span v-show="managemenPhoto2_span">特殊经营许可证照片</span>
+          <div
+            class="managemenPhoto_mask"
+            v-show="managemenPhoto2_mask"
+            @click="managemenPhoto2mask"
+          ></div>
+          <img
+            class="close"
+            v-show="managemenPhoto2_close"
+            @click="managemenPhoto2close"
+            src="../../../assets/img/close.svg"
+            alt=""
+          />
         </div>
       </div>
       <div class="iptradio validitytimer">
@@ -120,9 +198,40 @@
       <unicom-button class="btn" @click="nextbtn">下一步</unicom-button>
     </div>
     <!-- 弹出遮罩层预览    联通ui组件库 -->
+    <!-- logo -->
     <unicom-popup v-model="logo_popup">
       <div class="popup-demo-center" @click="logo_popup = false">
         <img :src="logo_user_photo" alt="" />
+      </div>
+    </unicom-popup>
+    <!-- 门店外 -->
+    <unicom-popup v-model="placePhoto1_popup">
+      <div class="popup-demo-center" @click="placePhoto1_popup = false">
+        <img :src="placePhoto1_user_photo" alt="" />
+      </div>
+    </unicom-popup>
+    <!-- 门店内 -->
+    <unicom-popup v-model="placePhoto2_popup">
+      <div class="popup-demo-center" @click="placePhoto2_popup = false">
+        <img :src="placePhoto2_user_photo" alt="" />
+      </div>
+    </unicom-popup>
+    <!-- 收银台 -->
+    <unicom-popup v-model="placePhoto3_popup">
+      <div class="popup-demo-center" @click="placePhoto3_popup = false">
+        <img :src="placePhoto3_user_photo" alt="" />
+      </div>
+    </unicom-popup>
+    <!-- 经营执照照片 -->
+    <unicom-popup v-model="managemenPhoto1_popup">
+      <div class="popup-demo-center" @click="managemenPhoto1_popup = false">
+        <img :src="managemenPhoto1_user_photo" alt="" />
+      </div>
+    </unicom-popup>
+    <!-- 特殊经营许可证照片 -->
+    <unicom-popup v-model="managemenPhoto2_popup">
+      <div class="popup-demo-center" @click="managemenPhoto2_popup = false">
+        <img :src="managemenPhoto2_user_photo" alt="" />
       </div>
     </unicom-popup>
   </div>
@@ -171,9 +280,41 @@ export default {
       logo_mask: false, //企业logo遮罩层div
       logo_popup: false, //企业logo预览弹出层
       logo_user_photo: "", //企业logo 用户拿取本地相册的照片
-      placePhoto_img: require("../../../assets/img/upload2.png"),
-      managemenPhoto_img1: require("../../../assets/img/upload3.png"),
-      managemenPhoto_img2: require("../../../assets/img/upload4.png"),
+
+      placePhoto1_img: require("../../../assets/img/upload2.png"), //照片默认展示图
+      placePhoto1_close: false, //门店外照片 图片删除
+      placePhoto1_mask: false, //门店外照片 遮罩层div
+      placePhoto1_span: true, //门店外照片  span字样
+      placePhoto1_popup: false, //门店外照片 预览弹出层
+      placePhoto1_photo: "", //门店外照片 用户拿取本地相册的照片
+
+      placePhoto2_img: require("../../../assets/img/upload2.png"), //照片默认展示图
+      placePhoto2_close: false, //门店内照片 图片删除
+      placePhoto2_mask: false, //门店内照片  遮罩层div
+      placePhoto2_span: true, //门店内照片  span字样
+      placePhoto2_popup: false, //门店内照片 预览弹出层
+      placePhoto2_photo: "", //门店内照片 用户拿取本地相册的照片
+
+      placePhoto3_img: require("../../../assets/img/upload2.png"), //照片默认展示图
+      placePhoto3_close: false, //收银台 图片删除
+      placePhoto3_mask: false, //收银台  遮罩层div
+      placePhoto3_span: true, //收银台  span字样
+      placePhoto3_popup: false, //收银台 预览弹出层
+      placePhoto3_photo: "", //收银台 用户拿取本地相册的照片
+
+      managemenPhoto_img1: require("../../../assets/img/upload3.png"), //照片默认展示图
+      managemenPhoto1_close: false, //经营执照照片 图片删除
+      managemenPhoto1_mask: false, //经营执照照片  遮罩层div
+      managemenPhoto1_span: true, //经营执照照片  span字样
+      managemenPhoto1_popup: false, //经营执照照片 预览弹出层
+      managemenPhoto1_photo: "", //经营执照照片 用户拿取本地相册的照片
+
+      managemenPhoto_img2: require("../../../assets/img/upload4.png"), //照片默认展示图
+      managemenPhoto2_close: false, //特殊经营许可证照片 图片删除
+      managemenPhoto2_mask: false, //特殊经营许可证照片  遮罩层div
+      managemenPhoto2_span: true, //特殊经营许可证照片  span字样
+      managemenPhoto2_popup: false, //特殊经营许可证照片 预览弹出层
+      managemenPhoto2_photo: "", //特殊经营许可证照片 用户拿取本地相册的照片
     };
   },
 
@@ -195,6 +336,107 @@ export default {
     logomask() {
       this.logo_popup = true;
     },
+
+    //门店外照片 bas64数据
+    placePhoto1Base64(data) {
+      console.log(data);
+      this.placePhoto1_user_photo = data;
+      this.placePhoto1_close = true;
+      this.placePhoto1_mask = true;
+      this.placePhoto1_span = false;
+    },
+    //门店外照片 删除事件
+    placePhoto1close() {
+      this.placePhoto1_close = false;
+      this.placePhoto1_mask = false;
+      this.placePhoto1_span = true;
+      this.$refs.placePhoto1son.imgsrc = require("../../../assets/img/upload2.png");
+    },
+    //门店外照片 遮罩层点击放大预览
+    placePhoto1mask() {
+      this.placePhoto1_popup = true;
+    },
+
+    //门店内照片 bas64数据
+    placePhoto2Base64(data) {
+      console.log(data);
+      this.placePhoto2_user_photo = data;
+      this.placePhoto2_close = true;
+      this.placePhoto2_mask = true;
+      this.placePhoto2_span = false;
+    },
+    //门店内照片 删除事件
+    placePhoto2close() {
+      this.placePhoto2_close = false;
+      this.placePhoto2_mask = false;
+      this.placePhoto2_span = true;
+      this.$refs.placePhoto2son.imgsrc = require("../../../assets/img/upload2.png");
+    },
+    //门店内照片 遮罩层点击放大预览
+    placePhoto2mask() {
+      this.placePhoto2_popup = true;
+    },
+
+    //收银台 bas64数据
+    placePhoto3Base64(data) {
+      console.log(data);
+      this.placePhoto3_user_photo = data;
+      this.placePhoto3_close = true;
+      this.placePhoto3_mask = true;
+      this.placePhoto3_span = false;
+    },
+    //收银台 删除事件
+    placePhoto3close() {
+      this.placePhoto3_close = false;
+      this.placePhoto3_mask = false;
+      this.placePhoto3_span = true;
+      this.$refs.placePhoto3son.imgsrc = require("../../../assets/img/upload2.png");
+    },
+    //收银台 遮罩层点击放大预览
+    placePhoto3mask() {
+      this.placePhoto3_popup = true;
+    },
+
+    //经营许可证照片 bas64数据
+    managemenPhoto1Base64(data) {
+      console.log(data);
+      this.managemenPhoto1_user_photo = data;
+      this.managemenPhoto1_close = true;
+      this.managemenPhoto1_mask = true;
+      this.managemenPhoto1_span = false;
+    },
+    //经营许可证照片 删除事件
+    managemenPhoto1close() {
+      this.managemenPhoto1_close = false;
+      this.managemenPhoto1_mask = false;
+      this.managemenPhoto1_span = true;
+      this.$refs.managemenPhoto1son.imgsrc = require("../../../assets/img/upload3.png");
+    },
+    //经营许可证照片 遮罩层点击放大预览
+    managemenPhoto1mask() {
+      this.managemenPhoto1_popup = true;
+    },
+
+    //特殊经营许可证照片 bas64数据
+    managemenPhoto2Base64(data) {
+      console.log(data);
+      this.managemenPhoto2_user_photo = data;
+      this.managemenPhoto2_close = true;
+      this.managemenPhoto2_mask = true;
+      this.managemenPhoto2_span = false;
+    },
+    //特殊经营许可证照片 删除事件
+    managemenPhoto2close() {
+      this.managemenPhoto2_close = false;
+      this.managemenPhoto2_mask = false;
+      this.managemenPhoto2_span = true;
+      this.$refs.managemenPhoto2son.imgsrc = require("../../../assets/img/upload4.png");
+    },
+    //特殊经营许可证照片 遮罩层点击放大预览
+    managemenPhoto2mask() {
+      this.managemenPhoto2_popup = true;
+    },
+
     //选择起始时间
     childtimer1(data) {
       console.log(data);
@@ -274,6 +516,22 @@ export default {
         position: relative;
         display: flex;
         justify-content: center;
+        .placePhoto_mask {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          z-index: 10;
+        }
+        .close {
+          width: 20px;
+          height: 20px;
+          background: #ffffff;
+          border-radius: 20px;
+          position: absolute;
+          top: -10px;
+          right: -10px;
+          z-index: 15;
+        }
         span {
           position: absolute;
           bottom: 18px;
@@ -314,6 +572,22 @@ export default {
         position: relative;
         display: flex;
         justify-content: center;
+        .managemenPhoto_mask {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          z-index: 10;
+        }
+        .close {
+          width: 20px;
+          height: 20px;
+          background: #ffffff;
+          border-radius: 20px;
+          position: absolute;
+          top: -10px;
+          right: -10px;
+          z-index: 15;
+        }
         span {
           font-family: PingFangSC-Regular;
           font-size: 11px;
