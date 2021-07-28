@@ -3,8 +3,10 @@
     <div class="div1">
       <div class="editDocument" @click="editDocument">新建商户</div>
       <label class="agreement" for="agr" @click="btnradio()">
-        <input type="radio" :checked="checked" />
-        <div id="agr" class="agree">同意协议</div>
+        <unicom-checked v-model="checked"> </unicom-checked>
+        <div id="agr" class="agree">
+          同意协议《中国联通饭票平台入驻协议》与《中国联通饭票平台支付结算协议》
+        </div>
       </label>
     </div>
     <div class="div2" @click="examine">
@@ -24,10 +26,11 @@
   </div>
 </template>
 <script>
-import { Toast } from "unicom-mobile";
+import { Toast, Checked } from "unicom-mobile";
 export default {
   components: {
     [Toast.name]: Toast,
+    [Checked.name]: Checked,
   },
   data() {
     return {
@@ -42,10 +45,14 @@ export default {
     },
     closeshow(tet) {
       this.maskshow = false;
-      if (tet == 0) {
+      if (this.checked == true) {
         this.checked = true;
       } else {
-        this.checked = false;
+        if (tet == 0) {
+          this.checked = true;
+        } else {
+          this.checked = false;
+        }
       }
     },
     textclick() {},
@@ -85,14 +92,14 @@ export default {
     background-position: 50% 4.414%;
     background-size: 214px;
     width: 266px;
-    height: 260px;
+    height: 300px;
     border: 2px solid #ffe1e1;
     box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.08);
     border-radius: 9px;
     margin-top: 42px;
     position: relative;
     .editDocument {
-      width: 161px;
+      width: 171px;
       height: 38px;
       line-height: 38px;
       background: #e60027;
@@ -106,12 +113,9 @@ export default {
     .agreement {
       display: flex;
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
       margin-top: 15px;
-      input {
-        width: 16px;
-        height: 16px;
-      }
+      padding: 0 22px;
       .agree {
         font-family: PingFangSC-Regular;
         font-size: 14px;
@@ -196,5 +200,19 @@ export default {
       }
     }
   }
+}
+/deep/.unicom-checked__label {
+  display: none;
+}
+//单选，复选按钮的样式
+/deep/.unicom-radio__input {
+  width: 18px;
+  height: 18px;
+  border-radius: 100px;
+}
+/deep/.unicom-checked__input {
+  width: 18px;
+  height: 18px;
+  border-radius: 100px;
 }
 </style>

@@ -9,7 +9,19 @@
           <div class="logo_text">请上传JPG、PNG格式图片，大小不超过5MB</div>
         </div>
         <div class="right">
-          <upload-pictures :value="logo_img"></upload-pictures>
+          <upload-pictures
+            :value="logo_img"
+            @imgsrc="logoimgBase64"
+            ref="logoimgson"
+          ></upload-pictures>
+          <div class="logo_mask" v-show="logo_mask" @click="logomask"></div>
+          <img
+            class="close"
+            v-show="logo_close"
+            @click="logoclose"
+            src="../../../assets/img/close.svg"
+            alt=""
+          />
         </div>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
@@ -23,7 +35,11 @@
       <div class="title">经营场所照片</div>
       <div class="photo">
         <div class="images">
-          <upload-pictures :value="placePhoto_img"></upload-pictures>
+          <upload-pictures
+            :value="placePhoto_img"
+            @imgsrc="placePhotoBase64"
+            ref="placePhotoson"
+          ></upload-pictures>
           <span>门店外照片</span>
         </div>
         <div class="images">
@@ -103,6 +119,12 @@
     <div class="btndiv">
       <unicom-button class="btn" @click="nextbtn">下一步</unicom-button>
     </div>
+    <!-- 弹出遮罩层预览    联通ui组件库 -->
+    <unicom-popup v-model="logo_popup">
+      <div class="popup-demo-center" @click="logo_popup = false">
+        <img :src="logo_user_photo" alt="" />
+      </div>
+    </unicom-popup>
   </div>
 </template>
 
@@ -143,8 +165,12 @@ export default {
       active: [1],
       field: "input",
       radio: "1",
-      validitychecked: false,
-      logo_img: require("../../../assets/img/upload1.png"),
+      validitychecked: false, //营业执照有效期单选框
+      logo_img: require("../../../assets/img/upload1.png"), //企业logo默认展示图
+      logo_close: false, //企业logo图片删除
+      logo_mask: false, //企业logo遮罩层div
+      logo_popup: false, //企业logo预览弹出层
+      logo_user_photo: "", //企业logo 用户拿取本地相册的照片
       placePhoto_img: require("../../../assets/img/upload2.png"),
       managemenPhoto_img1: require("../../../assets/img/upload3.png"),
       managemenPhoto_img2: require("../../../assets/img/upload4.png"),
@@ -152,12 +178,32 @@ export default {
   },
 
   methods: {
+    //企业logo bas64数据
+    logoimgBase64(data) {
+      console.log(data);
+      this.logo_user_photo = data;
+      this.logo_close = true;
+      this.logo_mask = true;
+    },
+    //企业logo 删除事件
+    logoclose() {
+      this.logo_close = false;
+      this.logo_mask = false;
+      this.$refs.logoimgson.imgsrc = require("../../../assets/img/upload1.png");
+    },
+    //企业logo 遮罩层点击放大预览
+    logomask() {
+      this.logo_popup = true;
+    },
+    //选择起始时间
     childtimer1(data) {
       console.log(data);
     },
+    //选择末尾时间
     childtimer2(data) {
       console.log(data);
     },
+    //下一步
     nextbtn() {
       this.$router.push("/secondStep");
     },
@@ -179,9 +225,26 @@ export default {
       .right {
         display: flex;
         align-items: center;
+        position: relative;
         img {
           width: 65px;
           height: 65px;
+        }
+        .logo_mask {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          z-index: 10;
+        }
+        .close {
+          width: 16px;
+          height: 16px;
+          background: #ffffff;
+          border-radius: 20px;
+          position: absolute;
+          top: -10px;
+          right: -10px;
+          z-index: 15;
         }
       }
       .logo_tit {
@@ -299,6 +362,13 @@ export default {
   margin-right: 5px;
 }
 
+//所有弹出层用户点击预览的尺寸样式
+.popup-demo-center {
+  img {
+    width: 329px;
+    height: 329px;
+  }
+}
 //单选，复选按钮的样式
 /deep/.unicom-radio__input {
   width: 18px;

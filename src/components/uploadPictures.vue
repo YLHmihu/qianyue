@@ -9,7 +9,6 @@ export default {
       imgsrc: this.value,
     };
   },
-  created() {},
   methods: {
     setAvatar() {
       window.ms
@@ -17,8 +16,10 @@ export default {
         .then((res) => {
           if (res && "gif" == res.imageType) {
             this.imgsrc = "data:image/gif;base64," + res.imageData;
+            this.$emit("imgsrc", this.imgsrc);
           } else if (res && "jpg" == res.imageType) {
             this.imgsrc = "data:image/jpg;base64," + res.imageData;
+            this.$emit("imgsrc", this.imgsrc);
           }
         })
         .catch((error) => {
