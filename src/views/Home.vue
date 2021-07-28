@@ -27,6 +27,7 @@
 </template>
 <script>
 import { Toast, Checked } from "unicom-mobile";
+import api from "../api/index";
 export default {
   components: {
     [Toast.name]: Toast,
@@ -58,6 +59,17 @@ export default {
     textclick() {},
     editDocument() {
       if (this.checked == true) {
+        //查询用户录入中店铺信息
+        let len = 32;
+        let chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
+        let maxPos = chars.length;
+        let params = "";
+        for (let i = 0; i < len; i++) {
+          params += chars.charAt(Math.floor(Math.random() * maxPos));
+        }
+        api.queryEntByPhone(params).then((res) => {
+          this.$store.commit("userchange", res.data.orderNo);
+        });
         this.$router.push("/aprepare");
       } else {
         Toast.info("请阅读并同意协议", "", 3000, "center", false);

@@ -105,8 +105,8 @@
       <div class="iptradio enterpriseType">
         <div class="left">企业类型</div>
         <unicom-radio-group v-model="radio" row>
-          <unicom-radio label="1">个体工商户</unicom-radio>
-          <unicom-radio label="0">企业</unicom-radio>
+          <unicom-radio label="20">个体工商户</unicom-radio>
+          <unicom-radio label="14">企业</unicom-radio>
         </unicom-radio-group>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
@@ -190,6 +190,7 @@
         <unicom-input
           :field="field"
           placeholder="请输入招牌名称，该名称将在地图展示"
+          :value="abbreviation"
         ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
@@ -243,6 +244,7 @@ import UploadPictures from "../../../components/uploadPictures.vue";
 import Interval from "../../../components/interval.vue";
 import Indate from "../../../components/indate.vue";
 import MyTextarea from "../../../components/textarea.vue";
+import api from "../../../api/index";
 import {
   Button,
   Input,
@@ -273,8 +275,10 @@ export default {
     return {
       active: [1],
       field: "input",
-      radio: "1",
+      radio: "20",
+      abbreviation: "", //企业简称
       validitychecked: false, //营业执照有效期单选框
+
       logo_img: require("../../../assets/img/upload1.png"), //企业logo默认展示图
       logo_close: false, //企业logo图片删除
       logo_mask: false, //企业logo遮罩层div
@@ -286,39 +290,49 @@ export default {
       placePhoto1_mask: false, //门店外照片 遮罩层div
       placePhoto1_span: true, //门店外照片  span字样
       placePhoto1_popup: false, //门店外照片 预览弹出层
-      placePhoto1_photo: "", //门店外照片 用户拿取本地相册的照片
+      placePhoto1_user_photo: "", //门店外照片 用户拿取本地相册的照片
 
       placePhoto2_img: require("../../../assets/img/upload2.png"), //照片默认展示图
       placePhoto2_close: false, //门店内照片 图片删除
       placePhoto2_mask: false, //门店内照片  遮罩层div
       placePhoto2_span: true, //门店内照片  span字样
       placePhoto2_popup: false, //门店内照片 预览弹出层
-      placePhoto2_photo: "", //门店内照片 用户拿取本地相册的照片
+      placePhoto2_user_photo: "", //门店内照片 用户拿取本地相册的照片
 
       placePhoto3_img: require("../../../assets/img/upload2.png"), //照片默认展示图
       placePhoto3_close: false, //收银台 图片删除
       placePhoto3_mask: false, //收银台  遮罩层div
       placePhoto3_span: true, //收银台  span字样
       placePhoto3_popup: false, //收银台 预览弹出层
-      placePhoto3_photo: "", //收银台 用户拿取本地相册的照片
+      placePhoto3_user_photo: "", //收银台 用户拿取本地相册的照片
 
       managemenPhoto_img1: require("../../../assets/img/upload3.png"), //照片默认展示图
       managemenPhoto1_close: false, //经营执照照片 图片删除
       managemenPhoto1_mask: false, //经营执照照片  遮罩层div
       managemenPhoto1_span: true, //经营执照照片  span字样
       managemenPhoto1_popup: false, //经营执照照片 预览弹出层
-      managemenPhoto1_photo: "", //经营执照照片 用户拿取本地相册的照片
+      managemenPhoto1_user_photo: "", //经营执照照片 用户拿取本地相册的照片
 
       managemenPhoto_img2: require("../../../assets/img/upload4.png"), //照片默认展示图
       managemenPhoto2_close: false, //特殊经营许可证照片 图片删除
       managemenPhoto2_mask: false, //特殊经营许可证照片  遮罩层div
       managemenPhoto2_span: true, //特殊经营许可证照片  span字样
       managemenPhoto2_popup: false, //特殊经营许可证照片 预览弹出层
-      managemenPhoto2_photo: "", //特殊经营许可证照片 用户拿取本地相册的照片
+      managemenPhoto2_user_photo: "", //特殊经营许可证照片 用户拿取本地相册的照片
     };
   },
-
+  created() {
+    this.init();
+  },
   methods: {
+    //查询店铺信息
+    init() {
+      let params = this.$store.state.userOrderNo;
+      api.queryEntByPhone(params).then((res) => {
+        this.radio = res.data.entType; //企业类型 (14-企业 20-个体工商）
+        this.abbreviation = res.data.shortName; //企业简称
+      });
+    },
     //企业logo bas64数据
     logoimgBase64(data) {
       console.log(data);

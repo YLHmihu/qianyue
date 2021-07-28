@@ -78,6 +78,7 @@
 
 <script>
 import Interval from "../../components/interval.vue";
+
 export default {
   components: {
     Interval,

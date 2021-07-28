@@ -180,20 +180,20 @@ export default {
       Photo1_mask: false, //拍摄人像页  遮罩层div
       Photo1_span: true, //拍摄人像页  span字样
       Photo1_popup: false, //拍摄人像页 预览弹出层
-      Photo1_photo: "", //拍摄人像页 用户拿取本地相册的照片
+      Photo1_user_photo: "", //拍摄人像页 用户拿取本地相册的照片
 
       Photo2_img: require("../../../assets/img/upload6.png"), //拍摄国徽页 照片默认展示图
       Photo2_close: false, //拍摄国徽页 图片删除
       Photo2_mask: false, //拍摄国徽页  遮罩层div
       Photo2_span: true, //拍摄国徽页  span字样
       Photo2_popup: false, //拍摄国徽页 预览弹出层
-      Photo2_photo: "", //拍摄国徽页 用户拿取本地相册的照片
+      Photo2_user_photo: "", //拍摄国徽页 用户拿取本地相册的照片
 
       liantong_img: require("../../../assets/img/upload7.png"), //联通人员手持 照片默认展示图
       liantong_close: false, //联通人员手持 图片删除
       liantong_mask: false, //联通人员手持  遮罩层div
       liantong_popup: false, //联通人员手持 预览弹出层
-      liantong_photo: "", //联通人员手持 用户拿取本地相册的照片
+      liantong_user_photo: "", //联通人员手持 用户拿取本地相册的照片
     };
   },
   methods: {
