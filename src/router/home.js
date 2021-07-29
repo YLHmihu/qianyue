@@ -51,4 +51,10 @@ export default [
         name: "examine",
         component: () => import("../views/query/examine.vue"),
     },
+    //123
+    {
+        path: "/123",
+        name: "123",
+        component: () => import("../views/123.vue"),
+    },
 ];

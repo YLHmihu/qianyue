@@ -5,7 +5,7 @@ import store from "./store";
 
 import "lib-flexible";
 import "unicom-mobile/lib/style.css";
-import Vconsole from "vconsole";
+import Vconsole from "vconsole/dist/vconsole.min";
 new Vconsole();
 
 Vue.config.productionTip = false;

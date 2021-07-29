@@ -164,6 +164,7 @@
         <unicom-input
           :field="field"
           placeholder="注册号或统一社会信用代码"
+          :value="busiLic"
         ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
@@ -182,6 +183,7 @@
         <unicom-input
           :field="field"
           placeholder="与营业执照上一致"
+          :value="fullname"
         ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
@@ -276,7 +278,9 @@ export default {
       active: [1],
       field: "input",
       radio: "20",
+      fullname: "", //企业全称
       abbreviation: "", //企业简称
+      busiLic: "", //注册号
       validitychecked: false, //营业执照有效期单选框
 
       logo_img: require("../../../assets/img/upload1.png"), //企业logo默认展示图
@@ -328,10 +332,17 @@ export default {
     //查询店铺信息
     init() {
       let params = this.$store.state.userOrderNo;
-      api.queryEntByPhone(params).then((res) => {
-        this.radio = res.data.entType; //企业类型 (14-企业 20-个体工商）
-        this.abbreviation = res.data.shortName; //企业简称
-      });
+      api
+        .queryEntByPhone(params)
+        .then((res) => {
+          this.radio = res.data.entType; //企业类型 (14-企业 20-个体工商）
+          this.abbreviation = res.data.shortName; //企业简称
+          this.fullname = res.data.entName;
+          this.busiLic = res.data.busiLic;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     //企业logo bas64数据
     logoimgBase64(data) {

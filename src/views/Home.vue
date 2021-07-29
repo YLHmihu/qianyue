@@ -76,7 +76,8 @@ export default {
       }
     },
     examine() {
-      this.$router.push("/examine");
+      // this.$router.push("/examine");
+      this.$router.push("/123");
     },
   },
 };
