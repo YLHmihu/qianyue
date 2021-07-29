@@ -6,6 +6,14 @@ export default {
       `/ci-mv-mas-front.ci-mv.sit.epay/v1/ent/queryEntByPhone?flowNo=${params}`
     );
   },
+  //查询商户身份信息接口
+  queryMerchantInfoByNo (params) {
+    return axios.post(
+      `/ci-mv-mas-front.ci-mv.sit.epay/v1/merchant/queryMerchantInfoByNo`,
+      params
+    );
+  },
+
   //新增商户信息
   addMerchantInfo (params) {
     return axios.post(
@@ -17,6 +25,13 @@ export default {
   queryMerchantInfoByNo (params) {
     return axios.post(
       `/ci-mv-mas-front.ci-mv.sit.epay/v1/merchant/queryMerchantInfoByNo`,
+      params
+    );
+  },
+  //多张图片预览接口
+  imagesPreview (params) {
+    return axios.post(
+      `/ci-mv-mas-front.ci-mv.sit.epay/v1/image/imagesPreview`,
       params
     );
   },

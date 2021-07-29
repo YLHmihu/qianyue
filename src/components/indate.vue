@@ -87,6 +87,7 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 14px;
   color: #333333;
+  line-height: 55px;
   .left {
     width: 76px;
     height: 55px;

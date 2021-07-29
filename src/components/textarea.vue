@@ -5,6 +5,7 @@
       :style="{ height: height }"
       v-model="value"
       class="textarea"
+      @blur="transmit"
     ></textarea>
   </div>
 </template>
@@ -13,12 +14,11 @@
 import calcTextareaHeight from "../assets/js/calcTextareaHeight";
 
 export default {
+  props: ["value"],
   data() {
     return {
-      // textarea内容
-      value: "",
       // 动态高度
-      height: "30px",
+      height: "20px",
     };
   },
   watch: {
@@ -29,6 +29,9 @@ export default {
   methods: {
     getHeight() {
       this.height = calcTextareaHeight(this.$refs.textarea, 1, null).height;
+    },
+    transmit() {
+      this.$emit("textvalue", this.value);
     },
   },
 };

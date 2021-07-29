@@ -155,7 +155,7 @@
       <div class="iptradio validitytimer">
         <div class="left">营业执照有效期</div>
         <indate @childtimer1="childtimer1" @childtimer2="childtimer2"></indate>
-        <unicom-checked v-model="validitychecked">长期</unicom-checked>
+        <unicom-checked v-model="isBusiLongTerm">长期</unicom-checked>
       </div>
 
       <unicom-divider :hairline="true"></unicom-divider>
@@ -175,7 +175,11 @@
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="iptradio">
         <div class="left">详细地址</div>
-        <my-textarea class="address_textarea"></my-textarea>
+        <my-textarea
+          class="address_textarea"
+          :value="busiAddress"
+          @textvalue="addressTexe"
+        ></my-textarea>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="ipt">
@@ -183,7 +187,7 @@
         <unicom-input
           :field="field"
           placeholder="与营业执照上一致"
-          :value="fullname"
+          :value="entName"
         ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
@@ -192,7 +196,7 @@
         <unicom-input
           :field="field"
           placeholder="请输入招牌名称，该名称将在地图展示"
-          :value="abbreviation"
+          :value="shortName"
         ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
@@ -275,13 +279,14 @@ export default {
   },
   data() {
     return {
-      active: [1],
+      active: [1], //头部步骤进度
       field: "input",
-      radio: "20",
-      fullname: "", //企业全称
-      abbreviation: "", //企业简称
+      radio: "20", //企业类型 (14-企业 20-个体工商）
+      entName: "", //企业全称
+      shortName: "", //企业简称
       busiLic: "", //注册号
-      validitychecked: false, //营业执照有效期单选框
+      busiAddress: "", //经营详细地址
+      isBusiLongTerm: false, //营业执照有效期单选框
 
       logo_img: require("../../../assets/img/upload1.png"), //企业logo默认展示图
       logo_close: false, //企业logo图片删除
@@ -336,14 +341,26 @@ export default {
         .queryEntByPhone(params)
         .then((res) => {
           this.radio = res.data.entType; //企业类型 (14-企业 20-个体工商）
-          this.abbreviation = res.data.shortName; //企业简称
-          this.fullname = res.data.entName;
-          this.busiLic = res.data.busiLic;
+          this.shortName = res.data.shortName; //企业简称
+          this.entName = res.data.entName; //企业全称
+          this.busiLic = res.data.busiLic; //注册号
+          this.busiAddress = res.data.busiAddress; //经营详细地址
+          if (res.data.isBusiLongTerm == "N") {
+            this.isBusiLongTerm = false; //营业执照是否长期有效Y 是，N 否
+          } else {
+            this.isBusiLongTerm = true;
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     },
+
+    //详细地址修改失焦的值
+    addressTexe(data) {
+      console.log(data);
+    },
+
     //企业logo bas64数据
     logoimgBase64(data) {
       console.log(data);
