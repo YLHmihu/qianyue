@@ -147,6 +147,7 @@ import Process from "../../../components/process.vue";
 import Interval from "../../../components/interval.vue";
 import UploadPictures from "../../../components/uploadPictures.vue";
 import Indate from "../../../components/indate.vue";
+import api from "../../../api/index";
 import {
   Button,
   Input,
@@ -196,7 +197,24 @@ export default {
       liantong_user_photo: "", //联通人员手持 用户拿取本地相册的照片
     };
   },
+  created() {
+    this.init();
+  },
   methods: {
+    init() {
+      let params = {
+        orderNo: this.$store.state.userOrderNo,
+      };
+      api
+        .queryMerchantInfoByNo(params)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
     //拍摄人像页 bas64数据
     Photo1Base64(data) {
       console.log(data);

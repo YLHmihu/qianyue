@@ -75,6 +75,7 @@
 import Process from "../../../components/process.vue";
 import Interval from "../../../components/interval.vue";
 import { Button, Input, Radio, RadioGroup } from "unicom-mobile";
+import api from "../../../api/index";
 export default {
   components: {
     Process,
@@ -94,8 +95,23 @@ export default {
       liansuotype: "1",
     };
   },
-  created() {},
+  created() {
+    this.init();
+  },
   methods: {
+    init() {
+      let params = {
+        orderNo: this.$store.state.userOrderNo,
+      };
+      api
+        .querySetleInfoByNo(params)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     nextbtn() {
       this.$router.push("/determine");
     },

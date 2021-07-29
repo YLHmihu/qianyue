@@ -165,6 +165,7 @@
           :field="field"
           placeholder="注册号或统一社会信用代码"
           :value="busiLic"
+          v-model="busiLic"
         ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
@@ -188,6 +189,7 @@
           :field="field"
           placeholder="与营业执照上一致"
           :value="entName"
+          v-model="entName"
         ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
@@ -197,6 +199,7 @@
           :field="field"
           placeholder="请输入招牌名称，该名称将在地图展示"
           :value="shortName"
+          v-model="shortName"
         ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
@@ -281,11 +284,12 @@ export default {
     return {
       active: [1], //头部步骤进度
       field: "input",
-      radio: "20", //企业类型 (14-企业 20-个体工商）
+      radio: "", //企业类型 (14-企业 20-个体工商）
       entName: "", //企业全称
       shortName: "", //企业简称
       busiLic: "", //注册号
-      busiAddress: "", //经营详细地址
+      busiAddress: "", //查询后显示的经营详细地址
+      bluraddressTexe: "", //用户输入失去焦点后经营详细地址
       isBusiLongTerm: false, //营业执照有效期单选框
 
       logo_img: require("../../../assets/img/upload1.png"), //企业logo默认展示图
@@ -293,6 +297,7 @@ export default {
       logo_mask: false, //企业logo遮罩层div
       logo_popup: false, //企业logo预览弹出层
       logo_user_photo: "", //企业logo 用户拿取本地相册的照片
+      logo_image_path: "", //企业logo 上传需要的地址
 
       placePhoto1_img: require("../../../assets/img/upload2.png"), //照片默认展示图
       placePhoto1_close: false, //门店外照片 图片删除
@@ -300,6 +305,7 @@ export default {
       placePhoto1_span: true, //门店外照片  span字样
       placePhoto1_popup: false, //门店外照片 预览弹出层
       placePhoto1_user_photo: "", //门店外照片 用户拿取本地相册的照片
+      placePhoto1_image_path: "", //门店外照片 上传需要的地址
 
       placePhoto2_img: require("../../../assets/img/upload2.png"), //照片默认展示图
       placePhoto2_close: false, //门店内照片 图片删除
@@ -307,6 +313,7 @@ export default {
       placePhoto2_span: true, //门店内照片  span字样
       placePhoto2_popup: false, //门店内照片 预览弹出层
       placePhoto2_user_photo: "", //门店内照片 用户拿取本地相册的照片
+      placePhoto2_image_path: "", //门店内照片 上传需要的地址
 
       placePhoto3_img: require("../../../assets/img/upload2.png"), //照片默认展示图
       placePhoto3_close: false, //收银台 图片删除
@@ -314,6 +321,7 @@ export default {
       placePhoto3_span: true, //收银台  span字样
       placePhoto3_popup: false, //收银台 预览弹出层
       placePhoto3_user_photo: "", //收银台 用户拿取本地相册的照片
+      placePhoto3_image_path: "", //收银台 上传需要的地址
 
       managemenPhoto_img1: require("../../../assets/img/upload3.png"), //照片默认展示图
       managemenPhoto1_close: false, //经营执照照片 图片删除
@@ -321,6 +329,7 @@ export default {
       managemenPhoto1_span: true, //经营执照照片  span字样
       managemenPhoto1_popup: false, //经营执照照片 预览弹出层
       managemenPhoto1_user_photo: "", //经营执照照片 用户拿取本地相册的照片
+      managemenPhoto1_image_path: "", //经营执照照片 上传需要的地址
 
       managemenPhoto_img2: require("../../../assets/img/upload4.png"), //照片默认展示图
       managemenPhoto2_close: false, //特殊经营许可证照片 图片删除
@@ -328,6 +337,7 @@ export default {
       managemenPhoto2_span: true, //特殊经营许可证照片  span字样
       managemenPhoto2_popup: false, //特殊经营许可证照片 预览弹出层
       managemenPhoto2_user_photo: "", //特殊经营许可证照片 用户拿取本地相册的照片
+      managemenPhoto2_image_path: "", //特殊经营许可证照片 上传需要的地址
     };
   },
   created() {
@@ -345,10 +355,12 @@ export default {
           this.entName = res.data.entName; //企业全称
           this.busiLic = res.data.busiLic; //注册号
           this.busiAddress = res.data.busiAddress; //经营详细地址
-          if (res.data.isBusiLongTerm == "N") {
-            this.isBusiLongTerm = false; //营业执照是否长期有效Y 是，N 否
-          } else {
-            this.isBusiLongTerm = true;
+          if (res.data.isBusiLongTerm) {
+            if (res.data.isBusiLongTerm == "N") {
+              this.isBusiLongTerm = false; //营业执照是否长期有效Y 是，N 否
+            } else {
+              this.isBusiLongTerm = true;
+            }
           }
         })
         .catch((err) => {
@@ -358,13 +370,20 @@ export default {
 
     //详细地址修改失焦的值
     addressTexe(data) {
-      console.log(data);
+      this.bluraddressTexe = data;
     },
 
     //企业logo bas64数据
     logoimgBase64(data) {
-      console.log(data);
-      this.logo_user_photo = data;
+      let params = {
+        data: data.data,
+        imageType: "01",
+        picBase64: data.picBase64,
+      };
+      api.imgFilter(params).then((res) => {
+        this.logo_image_path = res.data.imgUrl;
+      });
+      this.logo_user_photo = data.imgsrc;
       this.logo_close = true;
       this.logo_mask = true;
     },
@@ -381,8 +400,15 @@ export default {
 
     //门店外照片 bas64数据
     placePhoto1Base64(data) {
-      console.log(data);
-      this.placePhoto1_user_photo = data;
+      let params = {
+        data: data.data,
+        imageType: "04",
+        picBase64: data.picBase64,
+      };
+      api.imageUpload(params).then((res) => {
+        this.placePhoto1_image_path = res.data;
+      });
+      this.placePhoto1_user_photo = data.imgsrc;
       this.placePhoto1_close = true;
       this.placePhoto1_mask = true;
       this.placePhoto1_span = false;
@@ -401,8 +427,15 @@ export default {
 
     //门店内照片 bas64数据
     placePhoto2Base64(data) {
-      console.log(data);
-      this.placePhoto2_user_photo = data;
+      let params = {
+        data: data.data,
+        imageType: "05",
+        picBase64: data.picBase64,
+      };
+      api.imageUpload(params).then((res) => {
+        this.placePhoto2_image_path = res.data;
+      });
+      this.placePhoto2_user_photo = data.imgsrc;
       this.placePhoto2_close = true;
       this.placePhoto2_mask = true;
       this.placePhoto2_span = false;
@@ -421,8 +454,15 @@ export default {
 
     //收银台 bas64数据
     placePhoto3Base64(data) {
-      console.log(data);
-      this.placePhoto3_user_photo = data;
+      let params = {
+        data: data.data,
+        imageType: "06",
+        picBase64: data.picBase64,
+      };
+      api.imageUpload(params).then((res) => {
+        this.placePhoto3_image_path = res.data;
+      });
+      this.placePhoto3_user_photo = data.imgsrc;
       this.placePhoto3_close = true;
       this.placePhoto3_mask = true;
       this.placePhoto3_span = false;
@@ -441,8 +481,15 @@ export default {
 
     //经营许可证照片 bas64数据
     managemenPhoto1Base64(data) {
-      console.log(data);
-      this.managemenPhoto1_user_photo = data;
+      let params = {
+        data: data.data,
+        imageType: "02",
+        picBase64: data.picBase64,
+      };
+      api.imageUpload(params).then((res) => {
+        this.managemenPhoto1_image_path = res.data;
+      });
+      this.managemenPhoto1_user_photo = data.imgsrc;
       this.managemenPhoto1_close = true;
       this.managemenPhoto1_mask = true;
       this.managemenPhoto1_span = false;
@@ -461,8 +508,15 @@ export default {
 
     //特殊经营许可证照片 bas64数据
     managemenPhoto2Base64(data) {
-      console.log(data);
-      this.managemenPhoto2_user_photo = data;
+      let params = {
+        data: data.data,
+        imageType: "03",
+        picBase64: data.picBase64,
+      };
+      api.imageUpload(params).then((res) => {
+        this.managemenPhoto2_image_path = res.data;
+      });
+      this.managemenPhoto2_user_photo = data.imgsrc;
       this.managemenPhoto2_close = true;
       this.managemenPhoto2_mask = true;
       this.managemenPhoto2_span = false;
@@ -481,14 +535,41 @@ export default {
 
     //选择起始时间
     childtimer1(data) {
-      console.log(data);
+      this.yingye1 = data;
     },
     //选择末尾时间
     childtimer2(data) {
-      console.log(data);
+      this.yingye2 = data;
     },
     //下一步
     nextbtn() {
+      console.log(this.busiLic);
+      let term;
+      if (this.isBusiLongTerm == false) {
+        term = "N";
+      } else if (this.isBusiLongTerm == true) {
+        term = "Y";
+      }
+      let params = {
+        busiAddress: this.bluraddressTexe, //经营详细地址
+        busiArea: "110102", //经营地址区编码
+        busiCityCode: "110", //经营地址市编码
+        busiLic: this.busiLic, //注册号
+        busiLicPicPath: this.managemenPhoto1_image_path, //营业执照照片
+        busiLicPicTimeE: this.yingye1, //营业执照有效期结束时间：yyyyMMdd
+        busiLicPicTimeS: this.yingye2, //营业执照有效期开始时间：yyyyMMdd
+        busiLicType: "01", //营业执照类型 01 社会统一信用码（合一证）
+        busiPvcCode: "11", //经营地址省编码
+        busiScope: "dasdasdasd", //经营范围
+        entName: this.entName, //企业名称
+        entType: this.entType, //企业类型 (14-企业 20-个体工商）
+        isBusiLongTerm: term, //营业执照是否长期有效Y 是，N 否
+        logoPicPath: this.logo_image_path, //logo图片地址
+        orderNo: this.$store.state.userOrderNo, //订单号
+        shortName: this.shortName, //企业简称
+        specialPicPath: this.managemenPhoto2_image_path, //特殊经营许可照片
+      };
+      api.saveOrUpdateEnt(params);
       this.$router.push("/secondStep");
     },
   },

@@ -13,7 +13,21 @@ export default {
       params
     );
   },
+  //根据订单号查询结算信息
+  querySetleInfoByNo (params) {
+    return axios.post(
+      `/ci-mv-mas-front.ci-mv.sit.epay/v1/setle/querySetleInfoByNo`,
+      params
+    );
+  },
 
+  //新增店铺信息接口
+  saveOrUpdateEnt (params) {
+    return axios.post(
+      `/ci-mv-mas-front.ci-mv.sit.epay/v1/ent/saveOrUpdateEnt`,
+      params
+    );
+  },
   //新增商户信息
   addMerchantInfo (params) {
     return axios.post(
@@ -21,14 +35,29 @@ export default {
       params
     );
   },
-  //根据订单号查询商户信息表
-  queryMerchantInfoByNo (params) {
+  //新增结算信息
+  addSetleInfo (params) {
     return axios.post(
-      `/ci-mv-mas-front.ci-mv.sit.epay/v1/merchant/queryMerchantInfoByNo`,
+      `/ci-mv-mas-front.ci-mv.sit.epay/v1/setle/addSetleInfo`,
       params
     );
   },
-  //多张图片预览接口
+
+  //上传logo图的接口
+  imgFilter (params) {
+    return axios.post(
+      `/ci-mv-mas-front.ci-mv.sit.epay/v1/bdrco/imgFilter`,
+      params
+    );
+  },
+  //除logo图外的图片上传接口
+  imageUpload (params) {
+    return axios.post(
+      `/ci-mv-mas-front.ci-mv.sit.epay/v1/image/imageUpload`,
+      params
+    );
+  },
+  //拿接口返回的图片地址换取显示使用的图片src
   imagesPreview (params) {
     return axios.post(
       `/ci-mv-mas-front.ci-mv.sit.epay/v1/image/imagesPreview`,

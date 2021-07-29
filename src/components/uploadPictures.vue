@@ -7,6 +7,7 @@ export default {
   data() {
     return {
       imgsrc: this.value,
+      picPath: {},
     };
   },
   methods: {
@@ -16,10 +17,20 @@ export default {
         .then((res) => {
           if (res && "gif" == res.imageType) {
             this.imgsrc = "data:image/gif;base64," + res.imageData;
-            this.$emit("imgsrc", this.imgsrc);
+            this.picPath = {
+              data: "data:image/gif;base64,",
+              picBase64: res.imageData,
+              imgsrc: this.imgsrc,
+            };
+            this.$emit("imgsrc", this.picPath);
           } else if (res && "jpg" == res.imageType) {
             this.imgsrc = "data:image/jpg;base64," + res.imageData;
-            this.$emit("imgsrc", this.imgsrc);
+            this.picPath = {
+              data: "data:image/jpg;base64,",
+              picBase64: res.imageData,
+              imgsrc: this.imgsrc,
+            };
+            this.$emit("imgsrc", this.picPath);
           }
         })
         .catch((error) => {
