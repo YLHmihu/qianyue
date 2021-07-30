@@ -14,6 +14,7 @@
             @imgsrc="logoimgBase64"
             ref="logoimgson"
           ></upload-pictures>
+          <img class="toplogoimg" v-show="toplogoimg" :src="logo_img" alt="" />
           <div class="logo_mask" v-show="logo_mask" @click="logomask"></div>
           <img
             class="close"
@@ -41,6 +42,12 @@
             ref="placePhoto1son"
           ></upload-pictures>
           <span v-show="placePhoto1_span">门店外照片</span>
+          <img
+            class="topplacePhotoimg"
+            v-show="topplacePhoto1img"
+            :src="placePhoto1_img"
+            alt=""
+          />
           <div
             class="placePhoto_mask"
             v-show="placePhoto1_mask"
@@ -62,6 +69,12 @@
             ref="placePhoto2son"
           ></upload-pictures>
           <span v-show="placePhoto2_span">门店内照片</span>
+          <img
+            class="topplacePhotoimg"
+            v-show="topplacePhoto2img"
+            :src="placePhoto2_img"
+            alt=""
+          />
           <div
             class="placePhoto_mask"
             v-show="placePhoto2_mask"
@@ -83,6 +96,12 @@
             ref="placePhoto3son"
           ></upload-pictures>
           <span v-show="placePhoto3_span">收银台照片</span>
+          <img
+            class="topplacePhotoimg"
+            v-show="topplacePhoto3img"
+            :src="placePhoto3_img"
+            alt=""
+          />
           <div
             class="placePhoto_mask"
             v-show="placePhoto3_mask"
@@ -118,6 +137,12 @@
             ref="managemenPhoto1son"
           ></upload-pictures>
           <span v-show="managemenPhoto1_span">营业执照照片</span>
+          <img
+            class="topmanagemenPhotoimg"
+            v-show="topmanagemenPhoto1img"
+            :src="managemenPhoto_img1"
+            alt=""
+          />
           <div
             class="managemenPhoto_mask"
             v-show="managemenPhoto1_mask"
@@ -138,6 +163,12 @@
             ref="managemenPhoto2son"
           ></upload-pictures>
           <span v-show="managemenPhoto2_span">特殊经营许可证照片</span>
+          <img
+            class="topmanagemenPhotoimg"
+            v-show="topmanagemenPhoto2img"
+            :src="managemenPhoto_img2"
+            alt=""
+          />
           <div
             class="managemenPhoto_mask"
             v-show="managemenPhoto2_mask"
@@ -284,18 +315,26 @@ export default {
     return {
       active: [1], //头部步骤进度
       field: "input",
-      radio: "", //企业类型 (14-企业 20-个体工商）
-      entName: "", //企业全称
-      shortName: "", //企业简称
-      busiLic: "", //注册号
-      busiAddress: "", //查询后显示的经营详细地址
       bluraddressTexe: "", //用户输入失去焦点后经营详细地址
+
+      busiAddress: "", //查询后显示的经营详细地址
+      busiArea: "110102", //经营地址区编码
+      busiCityCode: "110", //经营地址市编码
+      busiLic: "", //注册号
+      busiLicPicTimeE: "", //营业执照有效期结束时间：yyyyMMdd
+      busiLicPicTimeS: "", //营业执照有效期开始时间：yyyyMMdd
+      busiLicType: "", //营业执照类型 01 社会统
+      busiPvcCode: "11", //经营地址省编码
+      entName: "", //企业全称
+      radio: "", //企业类型 (14-企业 20-个体工商）
       isBusiLongTerm: false, //营业执照有效期单选框
+      shortName: "", //企业简称
 
       logo_img: require("../../../assets/img/upload1.png"), //企业logo默认展示图
       logo_close: false, //企业logo图片删除
       logo_mask: false, //企业logo遮罩层div
       logo_popup: false, //企业logo预览弹出层
+      toplogoimg: false,
       logo_user_photo: "", //企业logo 用户拿取本地相册的照片
       logo_image_path: "", //企业logo 上传需要的地址
 
@@ -304,6 +343,7 @@ export default {
       placePhoto1_mask: false, //门店外照片 遮罩层div
       placePhoto1_span: true, //门店外照片  span字样
       placePhoto1_popup: false, //门店外照片 预览弹出层
+      topplacePhoto1img: false,
       placePhoto1_user_photo: "", //门店外照片 用户拿取本地相册的照片
       placePhoto1_image_path: "", //门店外照片 上传需要的地址
 
@@ -312,6 +352,7 @@ export default {
       placePhoto2_mask: false, //门店内照片  遮罩层div
       placePhoto2_span: true, //门店内照片  span字样
       placePhoto2_popup: false, //门店内照片 预览弹出层
+      topplacePhoto2img: false,
       placePhoto2_user_photo: "", //门店内照片 用户拿取本地相册的照片
       placePhoto2_image_path: "", //门店内照片 上传需要的地址
 
@@ -320,6 +361,7 @@ export default {
       placePhoto3_mask: false, //收银台  遮罩层div
       placePhoto3_span: true, //收银台  span字样
       placePhoto3_popup: false, //收银台 预览弹出层
+      topplacePhoto3img: false,
       placePhoto3_user_photo: "", //收银台 用户拿取本地相册的照片
       placePhoto3_image_path: "", //收银台 上传需要的地址
 
@@ -328,6 +370,7 @@ export default {
       managemenPhoto1_mask: false, //经营执照照片  遮罩层div
       managemenPhoto1_span: true, //经营执照照片  span字样
       managemenPhoto1_popup: false, //经营执照照片 预览弹出层
+      topmanagemenPhoto1img: false,
       managemenPhoto1_user_photo: "", //经营执照照片 用户拿取本地相册的照片
       managemenPhoto1_image_path: "", //经营执照照片 上传需要的地址
 
@@ -336,25 +379,40 @@ export default {
       managemenPhoto2_mask: false, //特殊经营许可证照片  遮罩层div
       managemenPhoto2_span: true, //特殊经营许可证照片  span字样
       managemenPhoto2_popup: false, //特殊经营许可证照片 预览弹出层
+      topmanagemenPhoto2img: false,
       managemenPhoto2_user_photo: "", //特殊经营许可证照片 用户拿取本地相册的照片
       managemenPhoto2_image_path: "", //特殊经营许可证照片 上传需要的地址
     };
   },
   created() {
     this.init();
+    this.imagepath();
   },
   methods: {
     //查询店铺信息
     init() {
+      //先查询录入中的
       let params = this.$store.state.userOrderNo;
       api
         .queryEntByPhone(params)
         .then((res) => {
-          this.radio = res.data.entType; //企业类型 (14-企业 20-个体工商）
-          this.shortName = res.data.shortName; //企业简称
-          this.entName = res.data.entName; //企业全称
-          this.busiLic = res.data.busiLic; //注册号
           this.busiAddress = res.data.busiAddress; //经营详细地址
+          // this.busiArea = res.data.busiArea, //经营地址区编码
+          // this.busiCityCode=res.data.busiCityCode,//经营地址市编码
+          this.busiLic = res.data.busiLic; //注册号
+          this.managemenPhoto1_image_path = res.data.busiLicPicPath; //营业执照照片
+          this.busiLicPicTimeE = res.data.busiLicPicTimeE; //营业执照有效期结束时间：yyyyMMdd
+          this.busiLicPicTimeS = res.data.busiLicPicTimeS; //营业执照有效期开始时间：yyyyMMdd
+          this.busiLicType = res.data.busiLicType; //营业执照类型 01 社会统
+          // this.busiPvcCode = res.data.busiPvcCode; //经营地址省编码
+          this.entName = res.data.entName; //企业全称
+          this.radio = res.data.entType; //企业类型 (14-企业 20-个体工商）
+          this.logoPicPath = res.data.logoPicPath; //logo图片地址
+          this.shortName = res.data.shortName; //企业简称
+          this.managemenPhoto2_image_path = res.data.specialPicPath; //特殊经营许可照片
+          this.placePhoto1_img = res.data.imgList[0].imgPath; //门店外
+          this.placePhoto2_img = res.data.imgList[1].imgPath; //门店内
+          this.placePhoto3_img = res.data.imgList[2].imgPath; //收银台
           if (res.data.isBusiLongTerm) {
             if (res.data.isBusiLongTerm == "N") {
               this.isBusiLongTerm = false; //营业执照是否长期有效Y 是，N 否
@@ -362,6 +420,51 @@ export default {
               this.isBusiLongTerm = true;
             }
           }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    imagepath() {
+      //拿录入中的图片path换取图片显示
+      let logo = {
+        flowNo: this.$store.state.userOrderNo,
+        list: [
+          {
+            imageType: "01",
+            picPath: this.logoPicPath,
+          },
+          // {
+          //   imageType: "02",
+          //   picPath:
+          //     "http://oss.ts-pfecs.epay/cc-ecss/oss/public/mas/20210729/90154584-f05d-11eb-b7c2-56da51fad048lhbwk.jpg",
+          // },
+          // {
+          //   imageType: "03",
+          //   picPath: this.managemenPhoto2_image_path,
+          // },
+          // {
+          //   imageType: "04",
+          //   picPath: this.placePhoto1_image_path,
+          // },
+          // {
+          //   imageType: "05",
+          //   picPath: this.placePhoto2_image_path,
+          // },
+          // {
+          //   imageType: "06",
+          //   picPath: this.placePhoto3_image_path,
+          // },
+        ],
+      };
+      api
+        .imagesPreview(logo)
+        .then((res) => {
+          this.logo_user_photo = res.data[0].data + "," + res.data[0].picBase64;
+          this.logo_img = res.data[0].data + "," + res.data[0].picBase64;
+          this.logo_close = true;
+          this.logo_mask = true;
+          this.toplogoimg = true;
         })
         .catch((err) => {
           console.log(err);
@@ -391,6 +494,7 @@ export default {
     logoclose() {
       this.logo_close = false;
       this.logo_mask = false;
+      this.toplogoimg = false;
       this.$refs.logoimgson.imgsrc = require("../../../assets/img/upload1.png");
     },
     //企业logo 遮罩层点击放大预览
@@ -563,6 +667,20 @@ export default {
         busiScope: "dasdasdasd", //经营范围
         entName: this.entName, //企业名称
         entType: this.entType, //企业类型 (14-企业 20-个体工商）
+        imgList: [
+          {
+            imgPath: this.placePhoto1_image_path,
+            imgType: "04",
+          },
+          {
+            imgPath: this.placePhoto2_image_path,
+            imgType: "05",
+          },
+          {
+            imgPath: this.placePhoto3_image_path,
+            imgType: "06",
+          },
+        ],
         isBusiLongTerm: term, //营业执照是否长期有效Y 是，N 否
         logoPicPath: this.logo_image_path, //logo图片地址
         orderNo: this.$store.state.userOrderNo, //订单号
@@ -595,11 +713,15 @@ export default {
           width: 65px;
           height: 65px;
         }
+        .toplogoimg {
+          position: absolute;
+          z-index: 10;
+        }
         .logo_mask {
           width: 100%;
           height: 100%;
           position: absolute;
-          z-index: 10;
+          z-index: 11;
         }
         .close {
           width: 16px;
@@ -639,11 +761,15 @@ export default {
         position: relative;
         display: flex;
         justify-content: center;
+        .topplacePhotoimg {
+          position: absolute;
+          z-index: 10;
+        }
         .placePhoto_mask {
           width: 100%;
           height: 100%;
           position: absolute;
-          z-index: 10;
+          z-index: 11;
         }
         .close {
           width: 20px;
@@ -695,11 +821,15 @@ export default {
         position: relative;
         display: flex;
         justify-content: center;
+        .topmanagemenPhotoimg {
+          position: absolute;
+          z-index: 10;
+        }
         .managemenPhoto_mask {
           width: 100%;
           height: 100%;
           position: absolute;
-          z-index: 10;
+          z-index: 11;
         }
         .close {
           width: 20px;
