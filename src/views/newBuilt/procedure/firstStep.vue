@@ -341,7 +341,9 @@ export default {
 
       busiAddress: "", //查询后显示的经营详细地址
       busiArea: "", //经营地址区编码
+      busiAreaName: "", //地区名称
       busiCityCode: "", //经营地址市编码
+      busiCityName: "", //市名称
       busiLic: "", //注册号
       validity: {
         busiLicPicTimeE: "", //营业执照有效期结束时间：yyyyMMdd
@@ -349,6 +351,7 @@ export default {
       },
       busiLicType: "", //营业执照类型 01 社会统
       busiPvcCode: "", //经营地址省编码
+      busiPvcName: "", //省名称
       entName: "", //企业全称
       radio: "", //企业类型 (14-企业 20-个体工商）
       isBusiLongTerm: false, //营业执照有效期单选框
@@ -421,14 +424,14 @@ export default {
         .queryEntByPhone(params)
         .then((res) => {
           this.busiAddress = res.data.busiAddress; //经营详细地址
-          // this.busiArea = res.data.busiArea, //经营地址区编码
-          // this.busiCityCode=res.data.busiCityCode,//经营地址市编码
+          this.busiAreaName = res.data.busiAreaName; //经营地址区名称
+          this.busiCityName = res.data.busiCityName; //经营地址市名称
           this.busiLic = res.data.busiLic; //注册号
           this.managemenPhoto1_image_path = res.data.busiLicPicPath; //营业执照照片
           this.validity.busiLicPicTimeE = res.data.busiLicPicTimeE; //营业执照有效期结束时间：yyyyMMdd
           this.validity.busiLicPicTimeS = res.data.busiLicPicTimeS; //营业执照有效期开始时间：yyyyMMdd
           // this.busiLicType = res.data.busiLicType; //营业执照类型 01 社会统
-          // this.busiPvcCode = res.data.busiPvcCode; //经营地址省编码
+          this.busiPvcName = res.data.busiPvcName; //经营地址省名称
           this.entName = res.data.entName; //企业全称
           this.radio = res.data.entType; //企业类型 (14-企业 20-个体工商）
           this.logo_image_path = res.data.logoPicPath; //logo图片地址
@@ -451,6 +454,8 @@ export default {
             }
           }
           this.imagepath();
+          this.result_levelcity =
+            this.busiPvcName + this.busiCityName + this.busiAreaName;
           this.flag = true;
         })
         .catch((err) => {
@@ -721,11 +726,11 @@ export default {
 
     //选择起始时间
     childtimer1(data) {
-      this.yingye1 = data;
+      this.yingye2 = data;
     },
     //选择末尾时间
     childtimer2(data) {
-      this.yingye2 = data;
+      this.yingye1 = data;
     },
     choicecity() {
       this.$refs.unicom_picker_levelcity.show((items) => {
@@ -756,6 +761,12 @@ export default {
       if (!this.bluraddressTexe) {
         this.bluraddressTexe = this.busiAddress;
       }
+      if (!this.busiPvcCode) {
+        this.busiPvcCode = this.citydata.level1;
+        this.busiCityCode = this.citydata.level2;
+        this.busiArea = this.citydata.level3;
+      }
+
       let params = {
         busiAddress: this.bluraddressTexe, //经营详细地址
         busiArea: this.busiArea, //经营地址区编码
