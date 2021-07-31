@@ -13,6 +13,12 @@
             ref="Photo1son"
           ></upload-pictures>
           <span v-show="Photo1_span">拍摄人像页</span>
+          <img
+            class="topPhotoimg"
+            v-show="topPhoto1img"
+            :src="Photo1_img"
+            alt=""
+          />
           <div
             class="Photo_mask"
             v-show="Photo1_mask"
@@ -33,6 +39,12 @@
             ref="Photo2son"
           ></upload-pictures>
           <span v-show="Photo2_span">拍摄国徽页</span>
+          <img
+            class="topPhotoimg"
+            v-show="topPhoto2img"
+            :src="Photo2_img"
+            alt=""
+          />
           <div
             class="Photo_mask"
             v-show="Photo2_mask"
@@ -59,7 +71,12 @@
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="iptradio validityPeriod">
         <div class="left">身份证有效期</div>
-        <indate></indate>
+        <indate
+          v-if="flag"
+          @childtimer1="childtimer1"
+          @childtimer2="childtimer2"
+          :value="validity"
+        ></indate>
         <unicom-checked v-model="validitychecked">长期</unicom-checked>
       </div>
     </div>
@@ -76,6 +93,12 @@
             @imgsrc="liantongBase64"
             ref="liantongson"
           ></upload-pictures>
+          <img
+            class="topliantongimg"
+            v-show="topliantongimg"
+            :src="liantong_img"
+            alt=""
+          />
           <div
             class="liantong_mask"
             v-show="liantong_mask"
@@ -176,25 +199,37 @@ export default {
       active: [1, 2],
       field: "input",
       validitychecked: false,
+      flag: false,
+      validity: {
+        busiLicPicTimeE: "", //身份证有效期止：yyyyMMdd
+        busiLicPicTimeS: "", //身份证有效期起：yyyyMMdd
+      },
+
       Photo1_img: require("../../../assets/img/upload5.png"), //拍摄人像页 照片默认展示图
       Photo1_close: false, //拍摄人像页 图片删除
       Photo1_mask: false, //拍摄人像页  遮罩层div
       Photo1_span: true, //拍摄人像页  span字样
       Photo1_popup: false, //拍摄人像页 预览弹出层
+      topPhoto1img: false,
       Photo1_user_photo: "", //拍摄人像页 用户拿取本地相册的照片
+      Photo1_image_path: "", //拍摄人像页 上传需要的地址
 
       Photo2_img: require("../../../assets/img/upload6.png"), //拍摄国徽页 照片默认展示图
       Photo2_close: false, //拍摄国徽页 图片删除
       Photo2_mask: false, //拍摄国徽页  遮罩层div
       Photo2_span: true, //拍摄国徽页  span字样
       Photo2_popup: false, //拍摄国徽页 预览弹出层
+      topPhoto2img: false,
       Photo2_user_photo: "", //拍摄国徽页 用户拿取本地相册的照片
+      Photo2_image_path: "", //拍摄国徽页 上传需要的地址
 
       liantong_img: require("../../../assets/img/upload7.png"), //联通人员手持 照片默认展示图
       liantong_close: false, //联通人员手持 图片删除
       liantong_mask: false, //联通人员手持  遮罩层div
       liantong_popup: false, //联通人员手持 预览弹出层
+      topliantongimg: false,
       liantong_user_photo: "", //联通人员手持 用户拿取本地相册的照片
+      liantong_image_path: "", //联通人员手持 上传需要的地址
     };
   },
   created() {
@@ -209,6 +244,7 @@ export default {
         .queryMerchantInfoByNo(params)
         .then((res) => {
           console.log(res);
+          this.flag = true;
         })
         .catch((err) => {
           console.log(err);
@@ -218,7 +254,7 @@ export default {
     //拍摄人像页 bas64数据
     Photo1Base64(data) {
       console.log(data);
-      this.Photo1_user_photo = data;
+      this.Photo1_user_photo = data.imgsrc;
       this.Photo1_close = true;
       this.Photo1_mask = true;
       this.Photo1_span = false;
@@ -238,7 +274,7 @@ export default {
     //拍摄人像页 bas64数据
     Photo2Base64(data) {
       console.log(data);
-      this.Photo2_user_photo = data;
+      this.Photo2_user_photo = data.imgsrc;
       this.Photo2_close = true;
       this.Photo2_mask = true;
       this.Photo2_span = false;
@@ -255,22 +291,30 @@ export default {
       this.Photo2_popup = true;
     },
 
-    //拍摄人像页 bas64数据
+    //联通人员 bas64数据
     liantongBase64(data) {
       console.log(data);
-      this.liantong_user_photo = data;
+      this.liantong_user_photo = data.imgsrc;
       this.liantong_close = true;
       this.liantong_mask = true;
     },
-    //拍摄人像页 删除事件
+    //联通人员 删除事件
     liantongclose() {
       this.liantong_close = false;
       this.liantong_mask = false;
       this.$refs.liantongson.imgsrc = require("../../../assets/img/upload7.png");
     },
-    //拍摄人像页 遮罩层点击放大预览
+    //联通人员 遮罩层点击放大预览
     liantongmask() {
       this.liantong_popup = true;
+    },
+    //身份证有效期止
+    childtimer1(data) {
+      console.log(data);
+    },
+    //身份证有效期起
+    childtimer2(data) {
+      console.log(data);
     },
 
     nextbtn() {
@@ -296,11 +340,15 @@ export default {
         position: relative;
         display: flex;
         justify-content: center;
+        .topPhotoimg {
+          position: absolute;
+          z-index: 10;
+        }
         .Photo_mask {
           width: 100%;
           height: 100%;
           position: absolute;
-          z-index: 10;
+          z-index: 11;
         }
         .close {
           width: 20px;
@@ -339,12 +387,16 @@ export default {
       justify-content: center;
       .images {
         position: relative;
+        .topliantongimg {
+          position: absolute;
+          z-index: 10;
+        }
         .liantong_mask {
           width: 100%;
           height: 100%;
           position: absolute;
           top: 0;
-          z-index: 10;
+          z-index: 11;
         }
         .close {
           width: 20px;

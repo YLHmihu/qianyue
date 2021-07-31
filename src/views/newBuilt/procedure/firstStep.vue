@@ -337,7 +337,7 @@ export default {
       layercity: 3,
       result_levelcity: "",
       citydata: {}, //弹出层默认选中的城市数组
-      flag: false,
+      flag: false, //等接口调完，再走组件起止时间
 
       busiAddress: "", //查询后显示的经营详细地址
       busiArea: "", //经营地址区编码
