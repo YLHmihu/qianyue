@@ -65,9 +65,7 @@ export default {
     );
   },
   //获取省份地市信息接口
-  getCity (params) {
-    return axios.get(
-      `/ci-mv-mas-front.ci-mv.sit.epay/v1/area/getCity?code=${params}`
-    );
+  getCity () {
+    return axios.get(`/ci-mv-mas-front.ci-mv.sit.epay/v1/area/getProvinceList`);
   },
 };

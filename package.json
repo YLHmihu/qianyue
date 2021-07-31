@@ -11,7 +11,7 @@
     "antd": "^4.16.8",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
-    "unicom-mobile": "^2.6.8",
+    "unicom-mobile": "^2.7.2",
     "vconsole": "^3.9.0",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",

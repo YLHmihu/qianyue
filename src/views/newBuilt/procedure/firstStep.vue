@@ -185,7 +185,12 @@
       </div>
       <div class="iptradio validitytimer">
         <div class="left">营业执照有效期</div>
-        <indate @childtimer1="childtimer1" @childtimer2="childtimer2"></indate>
+        <indate
+          v-if="flag"
+          @childtimer1="childtimer1"
+          @childtimer2="childtimer2"
+          :value="validity"
+        ></indate>
         <unicom-checked v-model="isBusiLongTerm">长期</unicom-checked>
       </div>
 
@@ -200,9 +205,12 @@
         ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
-      <div class="iptradio">
+      <div class="iptradio" @click="choicecity">
         <div>企业经营地址</div>
-        <!-- <div>北京市西城区 ></div> -->
+        <div class="resultMargin">
+          {{ result_levelcity }}
+        </div>
+        <unicom-icon name="arrow-right-line"></unicom-icon>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="iptradio">
@@ -275,6 +283,13 @@
         <img :src="managemenPhoto2_user_photo" alt="" />
       </div>
     </unicom-popup>
+    <unicom-picker
+      ref="unicom_picker_levelcity"
+      :layer="layercity"
+      :columns="columns_levelcity"
+      :value="citydata"
+      @cancel="onCancel_levelcity"
+    ></unicom-picker>
   </div>
 </template>
 
@@ -294,6 +309,7 @@ import {
   Picker,
   Popup,
   Checked,
+  Icon,
 } from "unicom-mobile";
 export default {
   components: {
@@ -310,21 +326,29 @@ export default {
     [Picker.name]: Picker,
     [Popup.name]: Popup,
     [Checked.name]: Checked,
+    [Icon.name]: Icon,
   },
   data() {
     return {
       active: [1], //头部步骤进度
       field: "input",
       bluraddressTexe: "", //用户输入失去焦点后经营详细地址
+      columns_levelcity: [],
+      layercity: 3,
+      result_levelcity: "",
+      citydata: {}, //弹出层默认选中的城市数组
+      flag: false,
 
       busiAddress: "", //查询后显示的经营详细地址
-      busiArea: "110102", //经营地址区编码
-      busiCityCode: "110", //经营地址市编码
+      busiArea: "", //经营地址区编码
+      busiCityCode: "", //经营地址市编码
       busiLic: "", //注册号
-      busiLicPicTimeE: "", //营业执照有效期结束时间：yyyyMMdd
-      busiLicPicTimeS: "", //营业执照有效期开始时间：yyyyMMdd
+      validity: {
+        busiLicPicTimeE: "", //营业执照有效期结束时间：yyyyMMdd
+        busiLicPicTimeS: "", //营业执照有效期开始时间：yyyyMMdd
+      },
       busiLicType: "", //营业执照类型 01 社会统
-      busiPvcCode: "11", //经营地址省编码
+      busiPvcCode: "", //经营地址省编码
       entName: "", //企业全称
       radio: "", //企业类型 (14-企业 20-个体工商）
       isBusiLongTerm: false, //营业执照有效期单选框
@@ -386,7 +410,7 @@ export default {
   },
   created() {
     this.init();
-    this.imagepath();
+    this.getcity();
   },
   methods: {
     //查询店铺信息
@@ -401,18 +425,24 @@ export default {
           // this.busiCityCode=res.data.busiCityCode,//经营地址市编码
           this.busiLic = res.data.busiLic; //注册号
           this.managemenPhoto1_image_path = res.data.busiLicPicPath; //营业执照照片
-          this.busiLicPicTimeE = res.data.busiLicPicTimeE; //营业执照有效期结束时间：yyyyMMdd
-          this.busiLicPicTimeS = res.data.busiLicPicTimeS; //营业执照有效期开始时间：yyyyMMdd
-          this.busiLicType = res.data.busiLicType; //营业执照类型 01 社会统
+          this.validity.busiLicPicTimeE = res.data.busiLicPicTimeE; //营业执照有效期结束时间：yyyyMMdd
+          this.validity.busiLicPicTimeS = res.data.busiLicPicTimeS; //营业执照有效期开始时间：yyyyMMdd
+          // this.busiLicType = res.data.busiLicType; //营业执照类型 01 社会统
           // this.busiPvcCode = res.data.busiPvcCode; //经营地址省编码
           this.entName = res.data.entName; //企业全称
           this.radio = res.data.entType; //企业类型 (14-企业 20-个体工商）
-          this.logoPicPath = res.data.logoPicPath; //logo图片地址
+          this.logo_image_path = res.data.logoPicPath; //logo图片地址
           this.shortName = res.data.shortName; //企业简称
           this.managemenPhoto2_image_path = res.data.specialPicPath; //特殊经营许可照片
-          this.placePhoto1_img = res.data.imgList[0].imgPath; //门店外
-          this.placePhoto2_img = res.data.imgList[1].imgPath; //门店内
-          this.placePhoto3_img = res.data.imgList[2].imgPath; //收银台
+          this.placePhoto1_image_path = res.data.imgList[0].imgPath; //门店外
+          this.placePhoto2_image_path = res.data.imgList[1].imgPath; //门店内
+          this.placePhoto3_image_path = res.data.imgList[2].imgPath; //收银台
+          this.citydata = {
+            type: 3,
+            level1: res.data.busiPvcCode,
+            level2: res.data.busiCityCode,
+            level3: res.data.busiArea,
+          };
           if (res.data.isBusiLongTerm) {
             if (res.data.isBusiLongTerm == "N") {
               this.isBusiLongTerm = false; //营业执照是否长期有效Y 是，N 否
@@ -420,11 +450,15 @@ export default {
               this.isBusiLongTerm = true;
             }
           }
+          this.imagepath();
+          this.flag = true;
         })
         .catch((err) => {
           console.log(err);
         });
     },
+
+    //图片path换取imgbas64拼接地址
     imagepath() {
       //拿录入中的图片path换取图片显示
       let logo = {
@@ -432,43 +466,86 @@ export default {
         list: [
           {
             imageType: "01",
-            picPath: this.logoPicPath,
+            picPath: this.logo_image_path,
           },
-          // {
-          //   imageType: "02",
-          //   picPath:
-          //     "http://oss.ts-pfecs.epay/cc-ecss/oss/public/mas/20210729/90154584-f05d-11eb-b7c2-56da51fad048lhbwk.jpg",
-          // },
-          // {
-          //   imageType: "03",
-          //   picPath: this.managemenPhoto2_image_path,
-          // },
-          // {
-          //   imageType: "04",
-          //   picPath: this.placePhoto1_image_path,
-          // },
-          // {
-          //   imageType: "05",
-          //   picPath: this.placePhoto2_image_path,
-          // },
-          // {
-          //   imageType: "06",
-          //   picPath: this.placePhoto3_image_path,
-          // },
+          {
+            imageType: "02",
+            picPath: this.managemenPhoto1_image_path,
+          },
+          {
+            imageType: "03",
+            picPath: this.managemenPhoto2_image_path,
+          },
+          {
+            imageType: "04",
+            picPath: this.placePhoto1_image_path,
+          },
+          {
+            imageType: "05",
+            picPath: this.placePhoto2_image_path,
+          },
+          {
+            imageType: "06",
+            picPath: this.placePhoto3_image_path,
+          },
         ],
       };
       api
         .imagesPreview(logo)
         .then((res) => {
+          //logo
           this.logo_user_photo = res.data[0].data + "," + res.data[0].picBase64;
           this.logo_img = res.data[0].data + "," + res.data[0].picBase64;
           this.logo_close = true;
           this.logo_mask = true;
           this.toplogoimg = true;
+          //营业执照
+          this.managemenPhoto1_user_photo =
+            res.data[1].data + "," + res.data[1].picBase64;
+          this.managemenPhoto_img1 =
+            res.data[1].data + "," + res.data[1].picBase64;
+          this.managemenPhoto1_close = true;
+          this.managemenPhoto1_mask = true;
+          this.topmanagemenPhoto1img = true;
+          //特殊经营
+          this.managemenPhoto2_user_photo =
+            res.data[2].data + "," + res.data[2].picBase64;
+          this.managemenPhoto_img2 =
+            res.data[2].data + "," + res.data[2].picBase64;
+          this.managemenPhoto2_close = true;
+          this.managemenPhoto2_mask = true;
+          this.topmanagemenPhoto2img = true;
+          //门店外
+          this.placePhoto1_user_photo =
+            res.data[3].data + "," + res.data[3].picBase64;
+          this.placePhoto1_img = res.data[3].data + "," + res.data[3].picBase64;
+          this.placePhoto1_close = true;
+          this.placePhoto1_mask = true;
+          this.topplacePhoto1img = true;
+          //门店内
+          this.placePhoto2_user_photo =
+            res.data[4].data + "," + res.data[4].picBase64;
+          this.placePhoto2_img = res.data[4].data + "," + res.data[4].picBase64;
+          this.placePhoto2_close = true;
+          this.placePhoto2_mask = true;
+          this.topplacePhoto2img = true;
+          //收银台
+          this.placePhoto3_user_photo =
+            res.data[5].data + "," + res.data[5].picBase64;
+          this.placePhoto3_img = res.data[5].data + "," + res.data[5].picBase64;
+          this.placePhoto3_close = true;
+          this.placePhoto3_mask = true;
+          this.topplacePhoto3img = true;
         })
         .catch((err) => {
           console.log(err);
         });
+    },
+    //获取城市列表
+    getcity() {
+      api.getCity().then((res) => {
+        this.columns_levelcity = res.data;
+      });
     },
 
     //详细地址修改失焦的值
@@ -522,6 +599,7 @@ export default {
       this.placePhoto1_close = false;
       this.placePhoto1_mask = false;
       this.placePhoto1_span = true;
+      this.topplacePhoto1img = false;
       this.$refs.placePhoto1son.imgsrc = require("../../../assets/img/upload2.png");
     },
     //门店外照片 遮罩层点击放大预览
@@ -549,6 +627,7 @@ export default {
       this.placePhoto2_close = false;
       this.placePhoto2_mask = false;
       this.placePhoto2_span = true;
+      this.topplacePhoto2img = false;
       this.$refs.placePhoto2son.imgsrc = require("../../../assets/img/upload2.png");
     },
     //门店内照片 遮罩层点击放大预览
@@ -576,6 +655,7 @@ export default {
       this.placePhoto3_close = false;
       this.placePhoto3_mask = false;
       this.placePhoto3_span = true;
+      this.topplacePhoto3img = false;
       this.$refs.placePhoto3son.imgsrc = require("../../../assets/img/upload2.png");
     },
     //收银台 遮罩层点击放大预览
@@ -603,6 +683,7 @@ export default {
       this.managemenPhoto1_close = false;
       this.managemenPhoto1_mask = false;
       this.managemenPhoto1_span = true;
+      this.topmanagemenPhoto1img = false;
       this.$refs.managemenPhoto1son.imgsrc = require("../../../assets/img/upload3.png");
     },
     //经营许可证照片 遮罩层点击放大预览
@@ -630,6 +711,7 @@ export default {
       this.managemenPhoto2_close = false;
       this.managemenPhoto2_mask = false;
       this.managemenPhoto2_span = true;
+      this.topmanagemenPhoto2img = false;
       this.$refs.managemenPhoto2son.imgsrc = require("../../../assets/img/upload4.png");
     },
     //特殊经营许可证照片 遮罩层点击放大预览
@@ -645,40 +727,60 @@ export default {
     childtimer2(data) {
       this.yingye2 = data;
     },
+    choicecity() {
+      this.$refs.unicom_picker_levelcity.show((items) => {
+        this.busiPvcCode = items[0].value;
+        this.busiCityCode = items[1].value;
+        this.busiArea = items[2].value;
+
+        this.result_levelcity = items[0].text + items[1].text + items[2].text;
+      });
+    },
+    onCancel_levelcity() {
+      console.log("取消");
+    },
     //下一步
     nextbtn() {
-      console.log(this.busiLic);
       let term;
       if (this.isBusiLongTerm == false) {
         term = "N";
       } else if (this.isBusiLongTerm == true) {
         term = "Y";
       }
+      if (!this.yingye1) {
+        this.yingye1 = this.validity.busiLicPicTimeE;
+      }
+      if (!this.yingye2) {
+        this.yingye2 = this.validity.busiLicPicTimeS;
+      }
+      if (!this.bluraddressTexe) {
+        this.bluraddressTexe = this.busiAddress;
+      }
       let params = {
         busiAddress: this.bluraddressTexe, //经营详细地址
-        busiArea: "110102", //经营地址区编码
-        busiCityCode: "110", //经营地址市编码
+        busiArea: this.busiArea, //经营地址区编码
+        busiCityCode: this.busiCityCode, //经营地址市编码
         busiLic: this.busiLic, //注册号
         busiLicPicPath: this.managemenPhoto1_image_path, //营业执照照片
         busiLicPicTimeE: this.yingye1, //营业执照有效期结束时间：yyyyMMdd
         busiLicPicTimeS: this.yingye2, //营业执照有效期开始时间：yyyyMMdd
         busiLicType: "01", //营业执照类型 01 社会统一信用码（合一证）
-        busiPvcCode: "11", //经营地址省编码
+        busiPvcCode: this.busiPvcCode, //经营地址省编码
         busiScope: "dasdasdasd", //经营范围
         entName: this.entName, //企业名称
-        entType: this.entType, //企业类型 (14-企业 20-个体工商）
+        entType: this.radio, //企业类型 (14-企业 20-个体工商）
         imgList: [
           {
             imgPath: this.placePhoto1_image_path,
-            imgType: "04",
+            imgType: "01",
           },
           {
             imgPath: this.placePhoto2_image_path,
-            imgType: "05",
+            imgType: "01",
           },
           {
             imgPath: this.placePhoto3_image_path,
-            imgType: "06",
+            imgType: "01",
           },
         ],
         isBusiLongTerm: term, //营业执照是否长期有效Y 是，N 否
@@ -864,6 +966,11 @@ export default {
       /deep/.unicom-radio__label {
         padding-right: 0;
       }
+    }
+    .resultMargin {
+      max-width: 220px;
+      overflow-x: auto;
+      overflow-y: hidden;
     }
     .address_textarea {
       width: 263px;
