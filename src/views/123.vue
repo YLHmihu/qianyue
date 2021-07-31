@@ -9,6 +9,7 @@
       :value="city"
       @cancel="onCancel_level3"
     ></unicom-picker>
+    <unicom-input :field="field" :clearable="true"></unicom-input>
   </div>
 </template>
 <script>
@@ -23,6 +24,7 @@ export default {
   },
   data() {
     return {
+      field: "input",
       layer3: 3,
       result_level3: "",
       city: { type: 3, level1: "110000", level2: "110100", level3: "110103" },

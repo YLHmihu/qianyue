@@ -614,4 +614,8 @@ export default {
   height: 18px;
   border-radius: 100px;
 }
+/deep/.unicom-input .unicom-table-view-cell {
+  width: 190px;
+  padding-right: 0;
+}
 </style>
