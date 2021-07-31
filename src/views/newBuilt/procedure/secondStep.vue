@@ -61,12 +61,20 @@
       </div>
       <div class="ipt name">
         <div>法人姓名</div>
-        <unicom-input :field="field"></unicom-input>
+        <unicom-input
+          :field="field"
+          :value="legalName"
+          v-model="legalName"
+        ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="ipt number">
         <div>法人身份证号</div>
-        <unicom-input :field="field"></unicom-input>
+        <unicom-input
+          :field="field"
+          :value="legalIdc"
+          v-model="legalIdc"
+        ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="iptradio validityPeriod">
@@ -77,7 +85,7 @@
           @childtimer2="childtimer2"
           :value="validity"
         ></indate>
-        <unicom-checked v-model="validitychecked">长期</unicom-checked>
+        <unicom-checked v-model="isLongFlag">长期</unicom-checked>
       </div>
     </div>
     <interval></interval>
@@ -115,32 +123,56 @@
       </div>
       <div class="ipt ltname">
         <div>联通员工姓名</div>
-        <unicom-input :field="field"></unicom-input>
+        <unicom-input
+          :field="field"
+          :value="employeesName"
+          v-model="employeesName"
+        ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="ipt ltnumber">
         <div>联通员工身份证号</div>
-        <unicom-input :field="field"></unicom-input>
+        <unicom-input
+          :field="field"
+          :value="employeesIdc"
+          v-model="employeesIdc"
+        ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="ipt buname">
         <div>商家联系人姓名</div>
-        <unicom-input :field="field"></unicom-input>
+        <unicom-input
+          :field="field"
+          :value="openerName"
+          v-model="openerName"
+        ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="ipt bunumber">
         <div>商家联系人身份证号</div>
-        <unicom-input :field="field"></unicom-input>
+        <unicom-input
+          :field="field"
+          :value="openerIdc"
+          v-model="openerIdc"
+        ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="ipt bumailbox">
         <div>商家联系人邮箱</div>
-        <unicom-input :field="field"></unicom-input>
+        <unicom-input
+          :field="field"
+          :value="merchantEmail"
+          v-model="merchantEmail"
+        ></unicom-input>
       </div>
       <unicom-divider :hairline="true"></unicom-divider>
       <div class="ipt buphone">
         <div>商家联系人电话</div>
-        <unicom-input :field="field"></unicom-input>
+        <unicom-input
+          :field="field"
+          :value="merchantPhone"
+          v-model="merchantPhone"
+        ></unicom-input>
       </div>
     </div>
     <div class="btn" @click="nextbtn">下一步</div>
@@ -198,12 +230,24 @@ export default {
     return {
       active: [1, 2],
       field: "input",
-      validitychecked: false,
       flag: false,
+
+      employeesIdc: "", //联通员工身份证
+      employeesName: "", //联通员工姓名
+      // employeesPicPath: "", //联通员工手持身份证照片
       validity: {
         busiLicPicTimeE: "", //身份证有效期止：yyyyMMdd
         busiLicPicTimeS: "", //身份证有效期起：yyyyMMdd
       },
+      isLongFlag: false, //身份证是否长期有效 Y 是，N 否
+      legalIdc: "", //法人身份证号
+      // legalIdcBackPath: "", //身份证反面
+      // legalIdcPath: "", //身份证正面
+      legalName: "", //法人姓名
+      merchantEmail: "", //商家联系人邮箱
+      merchantPhone: "", //商家联系人电话
+      openerIdc: "", //商家联系人身份证号
+      openerName: "", //商家联系人姓名
 
       Photo1_img: require("../../../assets/img/upload5.png"), //拍摄人像页 照片默认展示图
       Photo1_close: false, //拍摄人像页 图片删除
@@ -243,17 +287,86 @@ export default {
       api
         .queryMerchantInfoByNo(params)
         .then((res) => {
-          console.log(res);
           this.flag = true;
+          this.employeesIdc = res.data.employeesIdc; //联通员工身份证
+          this.employeesName = res.data.employeesName; //联通员工姓名
+          this.liantong_image_path = res.data.employeesPicPath; //联通员工手持身份证照片
+          this.validity.busiLicPicTimeE = res.data.idcEndDate; //身份证有效期止
+          this.validity.busiLicPicTimeS = res.data.idcStartDate; //身份证有效期起
+          // this.isLongFlag = res.data.isLongFlag; //身份证是否长期有效 Y 是，N 否
+          this.legalIdc = res.data.legalIdc; //法人身份证号
+          this.Photo2_image_path = res.data.legalIdcBackPath; //身份证反面
+          this.Photo1_image_path = res.data.legalIdcPath; //身份证正面
+          this.legalName = res.data.legalName; //法人姓名
+          this.merchantEmail = res.data.merchantEmail; //商家联系人邮箱
+          this.merchantPhone = res.data.merchantPhone; //商家联系人电话
+          this.openerIdc = res.data.openerIdc; //商家联系人身份证号
+          this.openerName = res.data.openerName; //商家联系人姓名
+          if (res.data.isLongFlag) {
+            if (res.data.isLongFlag == "N") {
+              this.isLongFlag = false; //身份证是否长期有效 Y 是，N 否
+            } else {
+              this.isLongFlag = true;
+            }
+          }
+          this.imagepath();
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    imagepath() {
+      //拿录入中的图片path换取图片显示
+      let logo = {
+        flowNo: this.$store.state.userOrderNo,
+        list: [
+          {
+            imageType: "07",
+            picPath: this.Photo1_image_path,
+          },
+          {
+            imageType: "08",
+            picPath: this.Photo2_image_path,
+          },
+          {
+            imageType: "09",
+            picPath: this.liantong_image_path,
+          },
+        ],
+      };
+      api.imagesPreview(logo).then((res) => {
+        //身份证正面
+        this.Photo1_user_photo = res.data[0].data + "," + res.data[0].picBase64;
+        this.Photo1_img = res.data[0].data + "," + res.data[0].picBase64;
+        this.Photo1_close = true;
+        this.Photo1_mask = true;
+        this.topPhoto1img = true;
+        //身份证反面
+        this.Photo2_user_photo = res.data[1].data + "," + res.data[1].picBase64;
+        this.Photo2_img = res.data[1].data + "," + res.data[1].picBase64;
+        this.Photo2_close = true;
+        this.Photo2_mask = true;
+        this.topPhoto2img = true;
+        //联通员工手持身份证
+        this.liantong_user_photo =
+          res.data[2].data + "," + res.data[2].picBase64;
+        this.liantong_img = res.data[2].data + "," + res.data[2].picBase64;
+        this.liantong_close = true;
+        this.liantong_mask = true;
+        this.topliantongimg = true;
+      });
+    },
 
     //拍摄人像页 bas64数据
     Photo1Base64(data) {
-      console.log(data);
+      let params = {
+        data: data.data,
+        imageType: "07",
+        picBase64: data.picBase64,
+      };
+      api.imageUpload(params).then((res) => {
+        this.Photo1_image_path = res.data;
+      });
       this.Photo1_user_photo = data.imgsrc;
       this.Photo1_close = true;
       this.Photo1_mask = true;
@@ -264,6 +377,7 @@ export default {
       this.Photo1_close = false;
       this.Photo1_mask = false;
       this.Photo1_span = true;
+      this.topPhoto1img = false;
       this.$refs.Photo1son.imgsrc = require("../../../assets/img/upload5.png");
     },
     //拍摄人像页 遮罩层点击放大预览
@@ -271,29 +385,44 @@ export default {
       this.Photo1_popup = true;
     },
 
-    //拍摄人像页 bas64数据
+    //拍摄国徽页 bas64数据
     Photo2Base64(data) {
-      console.log(data);
+      let params = {
+        data: data.data,
+        imageType: "08",
+        picBase64: data.picBase64,
+      };
+      api.imageUpload(params).then((res) => {
+        this.Photo2_image_path = res.data;
+      });
       this.Photo2_user_photo = data.imgsrc;
       this.Photo2_close = true;
       this.Photo2_mask = true;
       this.Photo2_span = false;
     },
-    //拍摄人像页 删除事件
+    //拍摄国徽页 删除事件
     Photo2close() {
       this.Photo2_close = false;
       this.Photo2_mask = false;
       this.Photo2_span = true;
+      this.topPhoto2img = false;
       this.$refs.Photo2son.imgsrc = require("../../../assets/img/upload6.png");
     },
-    //拍摄人像页 遮罩层点击放大预览
+    //拍摄国徽页 遮罩层点击放大预览
     Photo2mask() {
       this.Photo2_popup = true;
     },
 
     //联通人员 bas64数据
     liantongBase64(data) {
-      console.log(data);
+      let params = {
+        data: data.data,
+        imageType: "09",
+        picBase64: data.picBase64,
+      };
+      api.imageUpload(params).then((res) => {
+        this.liantong_image_path = res.data;
+      });
       this.liantong_user_photo = data.imgsrc;
       this.liantong_close = true;
       this.liantong_mask = true;
@@ -302,22 +431,53 @@ export default {
     liantongclose() {
       this.liantong_close = false;
       this.liantong_mask = false;
+      this.topliantongimg = false;
       this.$refs.liantongson.imgsrc = require("../../../assets/img/upload7.png");
     },
     //联通人员 遮罩层点击放大预览
     liantongmask() {
       this.liantong_popup = true;
     },
-    //身份证有效期止
-    childtimer1(data) {
-      console.log(data);
-    },
     //身份证有效期起
+    childtimer1(data) {
+      this.userStartDate = data;
+    },
+    // 身份证有效期止
     childtimer2(data) {
-      console.log(data);
+      this.userEndDate = data;
     },
 
     nextbtn() {
+      let term;
+      if (this.isLongFlag == false) {
+        term = "N";
+      } else if (this.isLongFlag == true) {
+        term = "Y";
+      }
+      if (!this.userEndDate) {
+        this.userEndDate = this.validity.busiLicPicTimeE;
+      }
+      if (!this.userStartDate) {
+        this.userStartDate = this.validity.busiLicPicTimeS;
+      }
+      let params = {
+        orderNo: this.$store.state.userOrderNo, //订单号
+        legalName: this.legalName, //法人姓名
+        legalIdc: this.legalIdc, //法人身份证
+        employeesName: this.employeesName, //联通员工姓名
+        employeesIdc: this.employeesIdc, //	联通员工身份证
+        openerName: this.openerName, //商家联系人姓名
+        openerIdc: this.openerIdc, //商家联系人身份证号
+        merchantEmail: this.merchantEmail, //商家联系人邮箱
+        merchantPhone: this.merchantPhone, //商家联系人电话
+        idcEndDate: this.userEndDate, //身份证有效期止
+        idcStartDate: this.userStartDate, //身份证有效期起
+        legalIdcPath: this.Photo1_image_path, //身份证正面
+        legalIdcBackPath: this.Photo2_image_path, //身份证反面
+        employeesPicPath: this.liantong_image_path, //联通员工手持身份证照片
+        isLongFlag: term, //身份证是否长期有效 Y 是，N 否
+      };
+      api.addMerchantInfo(params);
       this.$router.push("/thirdStep");
     },
   },
@@ -387,6 +547,8 @@ export default {
       justify-content: center;
       .images {
         position: relative;
+        display: flex;
+        align-items: center;
         .topliantongimg {
           position: absolute;
           z-index: 10;
@@ -395,7 +557,6 @@ export default {
           width: 100%;
           height: 100%;
           position: absolute;
-          top: 0;
           z-index: 11;
         }
         .close {

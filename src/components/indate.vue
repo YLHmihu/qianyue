@@ -38,18 +38,26 @@ export default {
     };
   },
   created() {
-    this.result_level1 =
-      this.value.busiLicPicTimeS.substring(0, 4) +
-      "/" +
-      this.value.busiLicPicTimeS.substring(4, 6) +
-      "/" +
-      this.value.busiLicPicTimeS.substring(6, 8);
-    this.result_level2 =
-      this.value.busiLicPicTimeE.substring(0, 4) +
-      "/" +
-      this.value.busiLicPicTimeE.substring(4, 6) +
-      "/" +
-      this.value.busiLicPicTimeE.substring(6, 8);
+    if (!this.value.busiLicPicTimeS) {
+      this.result_level1 = "";
+    } else {
+      this.result_level1 =
+        this.value.busiLicPicTimeS.substring(0, 4) +
+        "/" +
+        this.value.busiLicPicTimeS.substring(4, 6) +
+        "/" +
+        this.value.busiLicPicTimeS.substring(6, 8);
+    }
+    if (!this.value.busiLicPicTimeE) {
+      this.result_level2 = "";
+    } else {
+      this.result_level2 =
+        this.value.busiLicPicTimeE.substring(0, 4) +
+        "/" +
+        this.value.busiLicPicTimeE.substring(4, 6) +
+        "/" +
+        this.value.busiLicPicTimeE.substring(6, 8);
+    }
     this.init();
   },
 
