@@ -6,6 +6,13 @@ export default {
       `/ci-mv-mas-front.ci-mv.sit.epay/v1/ent/queryEntByPhone?flowNo=${params}`
     );
   },
+  //根据订单号查询店铺信息接口(适用于查看签约信息页中，点击修改)
+  queryEntByOrderNo (params) {
+    return axios.post(
+      `/ci-mv-mas-front.ci-mv.sit.epay/v1/ent/queryEntByOrderNo`,
+      params
+    );
+  },
   //查询商户身份信息接口
   queryMerchantInfoByNo (params) {
     return axios.post(
@@ -39,6 +46,27 @@ export default {
   addSetleInfo (params) {
     return axios.post(
       `/ci-mv-mas-front.ci-mv.sit.epay/v1/setle/addSetleInfo`,
+      params
+    );
+  },
+  //根据订单号查询店铺预览信息
+  queryStoreInfoByNo (params) {
+    return axios.post(
+      `/ci-mv-mas-front.ci-mv.sit.epay/v1/store/queryStoreInfoByNo`,
+      params
+    );
+  },
+  //提交审核信息接口
+  merApply (params) {
+    return axios.post(
+      `/ci-mv-mas-front.ci-mv.sit.epay/v1/masAas/merApply`,
+      params
+    );
+  },
+  //签约结果列表查询
+  querySignResult (params) {
+    return axios.post(
+      `/ci-mv-mas-front.ci-mv.sit.epay/v1/sign/querySignResult`,
       params
     );
   },

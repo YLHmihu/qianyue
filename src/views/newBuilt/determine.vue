@@ -44,12 +44,20 @@
 
 <script>
 import Interval from "../../components/interval.vue";
+import api from "../../api/index";
 
 export default {
   components: {
     Interval,
   },
+  created() {
+    this.init();
+  },
   methods: {
+    init() {
+      let params = {};
+      api.queryStoreInfoByNo(params);
+    },
     firstStep() {
       this.$router.push("/firstStep");
     },
@@ -60,6 +68,8 @@ export default {
       this.$router.push("/thirdStep");
     },
     nextbtn() {
+      let params = {};
+      api.merApply(params);
       this.$router.push("/submittedSuccessfully");
     },
   },

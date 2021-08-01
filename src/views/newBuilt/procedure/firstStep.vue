@@ -421,7 +421,7 @@ export default {
       //先查询录入中的
       let params = this.$store.state.userOrderNo;
       api
-        .queryEntByPhone(params)
+        .queryEntByOrderNo(params)
         .then((res) => {
           this.busiAddress = res.data.busiAddress; //经营详细地址
           this.busiAreaName = res.data.busiAreaName; //经营地址区名称

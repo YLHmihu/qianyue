@@ -1,6 +1,6 @@
 <template>
   <div class="examine">
-    <div class="item">
+    <div class="item" v-for="(item, index) in signList" :key="index">
       <div class="firstFloor">
         <div class="company">
           XXX餐饮有限公司<img
@@ -31,6 +31,7 @@
 
 <script>
 import { Dialog } from "unicom-mobile";
+import api from "../../api/index";
 export default {
   components: {
     [Dialog.name]: Dialog,
@@ -38,9 +39,19 @@ export default {
   data() {
     return {
       toast: false,
+      signList: [],
     };
   },
+  created() {
+    this.init();
+  },
   methods: {
+    init() {
+      let params = {};
+      api.querySignResult(params).then((res) => {
+        this.signList = res.data.signList;
+      });
+    },
     Tips() {
       this.toast = true;
     },
