@@ -36,6 +36,7 @@ module.exports = {
     proxy: {
       "/": {
         target: "http://proxy.ts-paas.epay",
+        // target: "http://172.29.40.213:10612",
         ws: false,
         // 将主机标头的原点更改为目标URL(设置跨域)
         changeOrigin: true,

@@ -9,7 +9,8 @@
       :value="city"
       @cancel="onCancel_level3"
     ></unicom-picker>
-    <unicom-input :field="field" :clearable="true"></unicom-input>
+    <unicom-input :field="field"></unicom-input>
+    <input type="text" v-model="add" />
   </div>
 </template>
 <script>
@@ -24,6 +25,7 @@ export default {
   },
   data() {
     return {
+      add: "哈？",
       field: "input",
       layer3: 3,
       result_level3: "",
